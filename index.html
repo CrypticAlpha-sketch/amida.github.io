@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>まこのあみだ -</title>
+    <title>まこのあみだ - モバイル対応版</title>
     <style>
         :root {
             --primary: #4361ee;
@@ -356,11 +356,24 @@
             }
         }
     </style>
+
+<style>
+  .masked {
+    color: transparent;
+    text-shadow: 0 0 5px #000;
+    cursor: pointer;
+  }
+</style>
+
 </head>
 <body>
+
+<button onclick="toggleGoals()">ゴール表示/非表示</button>
+<div id="result-area" style="margin-top: 20px; font-size: 20px; display: none;"></div>
+
     <div class="container">
         <header>
-            <h1>まこのあみだ_</h1>
+            <h1>まこのあみだ</h1>
         </header>
         
         <div class="game-container">
@@ -1248,5 +1261,20 @@
             });
         }
     </script>
+
+<script>
+function toggleGoals() {
+  const goals = document.querySelectorAll('.goal');
+  goals.forEach(goal => goal.classList.toggle('masked'));
+}
+
+function showResult(index) {
+  const goalText = document.querySelectorAll('.goal')[index].textContent;
+  const resultArea = document.getElementById('result-area');
+  resultArea.textContent = `結果：${goalText}`;
+  resultArea.style.display = 'block';
+}
+</script>
+
 </body>
 </html>
