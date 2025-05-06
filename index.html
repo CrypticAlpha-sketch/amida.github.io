@@ -3,151 +3,181 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>改良版・スマホ対応あみだくじ</title>
+    <title>改良版・スマホ対応あみだくじ 2.0</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f5f5;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 15px;
-            max-width: 100%;
-            margin: 0 auto;
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #f72585;
+            --win: #4cc9f0;
+            --lose: #f72585;
+            --dark: #212529;
+            --light: #f8f9fa;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
         }
-        h1 {
-            color: #333;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
-            text-align: center;
-        }
-        .controls {
+        
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-            width: 100%;
+            overflow: hidden;
         }
+        
+        .container {
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            padding: 10px;
+            gap: 8px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 10px 0;
+        }
+        
+        h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--secondary);
+        }
+        
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .controls {
+            background: white;
+            border-radius: var(--radius);
+            padding: 12px;
+            box-shadow: var(--shadow);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 12px;
+        }
+        
         .control-group {
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: #fff;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            width: 100%;
         }
-        button {
-            padding: 12px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
-            margin-top: 5px;
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        button:hover {
-            background-color: #45a049;
+        
+        label {
+            font-size: 14px;
+            font-weight: 500;
         }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
+        
         input[type="number"] {
+            width: 60px;
             padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            width: 60px;
+            border-radius: 6px;
+            text-align: center;
         }
-        label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 16px;
+        
+        input[type="range"] {
+            flex: 1;
         }
-        .amidakuji-container {
-            position: relative;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px;
-            width: 100%;
-            margin-bottom: 15px;
-            overflow-x: auto;
-            box-sizing: border-box;
-        }
-        .canvas-container {
-            overflow-x: auto;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        .speed-control {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        #speedSlider {
-            flex-grow: 1;
-        }
-        .footer {
-            margin-top: 15px;
+        
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
             font-size: 14px;
-            color: #666;
-            text-align: center;
         }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
         .start-selector {
-            margin-top: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: #f9f9f9;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
         }
+        
         .start-selector-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
+            font-weight: 600;
+            font-size: 14px;
         }
-        @media (max-width: 480px) {
-            .control-group {
-                padding: 10px;
-            }
-            button {
-                padding: 10px;
-                font-size: 14px;
-            }
-            h1 {
-                font-size: 1.3rem;
-            }
+        
+        .radio-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
-        .result-message {
-            margin-top: 15px;
+        
+        .button-group {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .canvas-container {
+            flex: 1;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             padding: 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-align: center;
-            display: none;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
         }
-        .winner-result {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
         }
-        .loser-result {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+        
         .label-input {
             position: absolute;
             padding: 8px;
-            border: 2px solid #4CAF50;
-            border-radius: 4px;
+            border: 2px solid var(--primary);
+            border-radius: 6px;
             background-color: white;
             font-size: 14px;
             width: 150px;
@@ -155,59 +185,177 @@
             display: none;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        .winner-marker {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            position: absolute;
-            bottom: 0;
-            transform: translateX(-50%);
-            font-size: 14px;
+        
+        .result-container {
+            padding: 10px;
+        }
+        
+        .result-message {
+            padding: 12px;
+            border-radius: var(--radius);
+            font-weight: bold;
+            text-align: center;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .winner-result {
+            background-color: rgba(76, 201, 240, 0.2);
+            color: var(--win);
+            border: 1px solid var(--win);
+        }
+        
+        .loser-result {
+            background-color: rgba(247, 37, 133, 0.1);
+            color: var(--lose);
+            border: 1px solid var(--lose);
+        }
+        
+        footer {
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+        
+        .hint {
+            margin: 5px 0;
+        }
+        
+        .hint strong {
+            color: var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 5px;
+                gap: 5px;
+            }
+            
+            .controls {
+                padding: 10px;
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .control-group {
+                gap: 6px;
+            }
+            
+            footer {
+                font-size: 11px;
+                padding: 8px;
+            }
+        }
+        
+        /* For even smaller screens */
+        @media (max-width: 480px) {
+            .input-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .input-group input[type="range"] {
+                width: 100%;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .start-selector {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .radio-options {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+            
+            .canvas-container {
+                min-height: 250px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>改良版・スマホ対応あみだくじ</h1>
-    
-    <div class="controls">
-        <div class="control-group">
-            <label>
-                列の数: 
-                <input type="number" id="columns" min="2" max="10" value="8">
-            </label>
-            <label>
-                横線の数: 
-                <input type="number" id="horizontalLines" min="3" max="30" value="15">
-            </label>
-            <div class="speed-control">
-                <span>アニメーション速度:</span>
-                <input type="range" id="speedSlider" min="1" max="10" value="5">
-                <span id="speedValue">5</span>
+    <div class="container">
+        <header>
+            <h1>改良版・スマホ対応あみだくじ 2.0</h1>
+        </header>
+        
+        <div class="game-area">
+            <div class="controls">
+                <div class="control-group">
+                    <div class="input-group">
+                        <label for="columns">列の数:</label>
+                        <input type="number" id="columns" min="2" max="10" value="5">
+                    </div>
+                    <div class="input-group">
+                        <label for="horizontalLines">横線の数:</label>
+                        <input type="number" id="horizontalLines" min="3" max="30" value="10">
+                    </div>
+                    <div class="input-group">
+                        <label for="speedSlider">アニメーション速度:</label>
+                        <input type="range" id="speedSlider" min="1" max="10" value="5">
+                        <span id="speedValue">5</span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <div class="button-group">
+                        <button id="generateBtn" class="btn btn-primary">あみだくじを生成</button>
+                    </div>
+                    
+                    <div class="start-selector" id="startSelector">
+                        <span class="start-selector-label">スタート位置:</span>
+                        <div class="radio-options">
+                            <!-- Start column selector will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="traceBtn" disabled class="btn btn-secondary">トレースする</button>
+                        <button id="resetBtn" disabled class="btn btn-secondary">リセット</button>
+                    </div>
+                </div>
             </div>
-            <button id="generateBtn">あみだくじを生成</button>
-            <div class="start-selector" id="startSelector">
-                <span class="start-selector-label">スタート位置を選択:</span>
-                <!-- Start column selector will be generated here -->
+            
+            <div class="canvas-container">
+                <canvas id="amidakuji"></canvas>
+                <input type="text" id="labelInput" class="label-input">
             </div>
-            <button id="traceBtn" disabled>トレースする</button>
-            <button id="resetBtn" disabled>リセット</button>
+            
+            <div class="result-container">
+                <div class="result-message" id="resultMessage"></div>
+            </div>
         </div>
-    </div>
-
-    <div class="amidakuji-container">
-        <div class="canvas-container">
-            <canvas id="amidakuji"></canvas>
-            <input type="text" id="labelInput" class="label-input">
-        </div>
-    </div>
-
-    <div class="result-message" id="resultMessage"></div>
-
-    <div class="footer">
-        スタート位置を選んで「トレースする」ボタンをクリックすると、結果をアニメーションで表示します。<br>
-        <strong>青鉛筆アイコン</strong>または<strong>スタートラベル</strong>をクリックしてスタート名を編集できます。<br>
-        <strong>オレンジ鉛筆アイコン</strong>または<strong>ゴールラベル</strong>をクリックしてゴール名を編集できます。<br>
-        ゴールの下にあるチェックボックスで当たりを設定できます。
+        
+        <footer>
+            <div class="hint">スタート位置を選んで「トレースする」ボタンをクリックすると、結果をアニメーションで表示します。</div>
+            <div class="hint"><strong>青鉛筆アイコン</strong>または<strong>スタートラベル</strong>をクリックしてスタート名を編集できます。</div>
+            <div class="hint"><strong>オレンジ鉛筆アイコン</strong>または<strong>ゴールラベル</strong>をクリックしてゴール名を編集できます。</div>
+            <div class="hint">ゴールの下にあるチェックボックスで当たりを設定できます。</div>
+        </footer>
     </div>
 
     <script>
@@ -221,9 +369,10 @@
         const ctx = canvas.getContext('2d');
         const speedSlider = document.getElementById('speedSlider');
         const speedValue = document.getElementById('speedValue');
-        const startSelector = document.getElementById('startSelector');
+        const startSelector = document.getElementById('startSelector').querySelector('.radio-options');
         const resultMessage = document.getElementById('resultMessage');
         const labelInput = document.getElementById('labelInput');
+        const canvasContainer = document.querySelector('.canvas-container');
 
         // Constants for vertical layout
         const HORIZONTAL_SPACING = 50;  // Space between vertical lines
@@ -262,6 +411,9 @@
         speedSlider.addEventListener('input', updateSpeed);
         canvas.addEventListener('click', handleCanvasClick);
         
+        // Make canvas responsive to container
+        window.addEventListener('resize', adjustCanvasToContainer);
+        
         // Label input event listeners
         labelInput.addEventListener('blur', finishEditingLabel);
         labelInput.addEventListener('keydown', function(e) {
@@ -274,6 +426,24 @@
         function updateSpeed() {
             animationSpeed = parseInt(speedSlider.value);
             speedValue.textContent = animationSpeed;
+        }
+
+        // Function to adjust canvas to container size
+        function adjustCanvasToContainer() {
+            const containerRect = canvasContainer.getBoundingClientRect();
+            
+            // Determine available width and height
+            const availableWidth = containerRect.width - 20; // 20px padding
+            const availableHeight = containerRect.height - 20; // 20px padding
+            
+            // Determine scale factor based on the smaller dimension
+            const scaleX = availableWidth / canvasWidth;
+            const scaleY = availableHeight / canvasHeight;
+            const scale = Math.min(scaleX, scaleY, 1); // Don't scale up beyond 1
+            
+            // Apply scale
+            canvas.style.transformOrigin = 'center';
+            canvas.style.transform = `scale(${scale})`;
         }
 
         // Initialize
@@ -301,25 +471,19 @@
             // Reset result message
             resultMessage.style.display = 'none';
 
-            // Calculate canvas dimensions based on content and screen size
-            let availableWidth = Math.min(window.innerWidth - 40, 500); // Max width with padding
-            
-            // Calculate width based on the number of columns
+            // Calculate canvas dimensions based on content
             canvasWidth = numColumns * HORIZONTAL_SPACING + LEFT_MARGIN * 2;
-            
-            // Make sure the canvas is at least 300px wide
-            canvasWidth = Math.max(canvasWidth, 300);
-            
-            // But not wider than the available space
-            canvasWidth = Math.min(canvasWidth, availableWidth);
+            canvasWidth = Math.max(canvasWidth, 300); // Minimum width
             
             // Calculate height based on the number of horizontal lines
-            // Add BOTTOM_MARGIN to ensure there's space at the bottom
             canvasHeight = numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + BOTTOM_MARGIN;
             
             // Set canvas dimensions
             canvas.width = canvasWidth;
             canvas.height = canvasHeight;
+            
+            // Apply responsive scaling
+            adjustCanvasToContainer();
 
             // Initialize labels and winners if not already set
             if (startLabels.length !== numColumns) {
@@ -413,13 +577,12 @@
 
         // Function to generate start column selector
         function generateStartColumnSelector() {
-            startSelector.innerHTML = '<span class="start-selector-label">スタート位置を選択:</span>';
+            startSelector.innerHTML = '';
             startColumnRadios = [];
             
             for (let i = 0; i < numColumns; i++) {
                 const radioContainer = document.createElement('div');
-                radioContainer.style.display = 'inline-block';
-                radioContainer.style.marginRight = '10px';
+                radioContainer.className = 'radio-container';
                 
                 const radio = document.createElement('input');
                 radio.type = 'radio';
@@ -471,30 +634,30 @@
                 ctx.stroke();
                 
                 // Add start position markers
-                ctx.fillStyle = '#333';
+                ctx.fillStyle = '#4361ee';
                 ctx.beginPath();
                 ctx.arc(x, TOP_MARGIN, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Add column numbers at the top
-                ctx.fillStyle = '#333';
+                ctx.fillStyle = '#212529';
                 ctx.font = '14px Arial';
                 ctx.textAlign = 'center';
                 ctx.fillText((i + 1).toString(), x, TOP_MARGIN - 20);
                 
                 // Draw start labels with edit icon
-                ctx.fillStyle = '#0066cc';
+                ctx.fillStyle = '#4361ee';
                 ctx.font = 'bold 12px Arial';
                 
                 // Draw edit icon (pencil)
                 ctx.fillRect(x - 50, TOP_MARGIN - 48, 12, 12);
                 ctx.fillStyle = 'white';
                 ctx.fillRect(x - 48, TOP_MARGIN - 46, 8, 8);
-                ctx.fillStyle = '#0066cc';
+                ctx.fillStyle = '#4361ee';
                 ctx.fillRect(x - 47, TOP_MARGIN - 45, 1, 6);
                 
                 // Draw label text
-                ctx.fillStyle = '#0066cc';
+                ctx.fillStyle = '#4361ee';
                 ctx.fillText(startLabels[i], x, TOP_MARGIN - 35);
                 
                 // Add start label click area
@@ -508,26 +671,27 @@
                 });
                 
                 // Add end position markers
-                ctx.fillStyle = '#333';
+                ctx.fillStyle = '#f72585';
                 ctx.beginPath();
                 ctx.arc(x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN, 4, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Add column numbers at the bottom
+                ctx.fillStyle = '#212529';
                 ctx.fillText((i + 1).toString(), x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 20);
                 
                 // Draw end labels with edit icon
-                ctx.fillStyle = '#cc6600';
+                ctx.fillStyle = '#f72585';
                 
                 // Draw edit icon (pencil)
                 ctx.fillRect(x - 50, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 22, 12, 12);
                 ctx.fillStyle = 'white';
                 ctx.fillRect(x - 48, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 24, 8, 8);
-                ctx.fillStyle = '#cc6600';
+                ctx.fillStyle = '#f72585';
                 ctx.fillRect(x - 47, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 25, 1, 6);
                 
                 // Draw label text
-                ctx.fillStyle = '#cc6600';
+                ctx.fillStyle = '#f72585';
                 ctx.font = 'bold 12px Arial';
                 ctx.fillText(endLabels[i], x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 35);
                 
@@ -543,14 +707,14 @@
                 
                 // Draw winner checkbox
                 const checkboxY = numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 50;
-                ctx.strokeStyle = winners[i] ? '#4CAF50' : '#999';
+                ctx.strokeStyle = winners[i] ? '#4cc9f0' : '#999';
                 ctx.lineWidth = 2;
                 ctx.beginPath();
                 ctx.rect(x - 8, checkboxY - 8, 16, 16);
                 ctx.stroke();
                 
                 if (winners[i]) {
-                    ctx.fillStyle = '#4CAF50';
+                    ctx.fillStyle = '#4cc9f0';
                     ctx.beginPath();
                     ctx.rect(x - 6, checkboxY - 6, 12, 12);
                     ctx.fill();
@@ -615,8 +779,11 @@
             if (isTracing) return;
             
             const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
             
             // Check if click is in any of our click areas
             for (const area of clickAreas) {
@@ -627,9 +794,9 @@
                     y <= area.y + area.height
                 ) {
                     if (area.type === 'startLabel') {
-                        editLabel('start', area.index, x + rect.left, y + rect.top);
+                        editLabel('start', area.index, e.clientX, e.clientY);
                     } else if (area.type === 'endLabel') {
-                        editLabel('end', area.index, x + rect.left, y + rect.top);
+                        editLabel('end', area.index, e.clientX, e.clientY);
                     } else if (area.type === 'winner') {
                         toggleWinner(area.index);
                     }
@@ -707,6 +874,9 @@
             
             // Hide any previous result message
             resultMessage.style.display = 'none';
+            
+            // Move canvas into view if needed
+            canvasContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             // Start animation
             animateTrace();
@@ -793,7 +963,7 @@
             // 再描画
             drawAmidakuji();
             
-            // アニメーション継続
+            // アニメーション継続 - use requestAnimationFrame for smoother animation
             animationFrame = requestAnimationFrame(animateTrace);
         }
 
@@ -829,18 +999,27 @@
             // Redraw one last time
             drawAmidakuji();
             
-            // Show result
-            resultMessage.innerHTML = `${startLabel} → ${endLabel}`;
+            // Show result with animation
+            resultMessage.className = isWinner ? 'result-message winner-result' : 'result-message loser-result';
             
-            if (isWinner) {
-                resultMessage.className = 'result-message winner-result';
-                resultMessage.innerHTML += ' <span>当たり！</span>';
-            } else {
-                resultMessage.className = 'result-message loser-result';
-                resultMessage.innerHTML += ' <span>はずれ</span>';
-            }
+            const resultText = document.createElement('div');
+            resultText.innerHTML = `
+                <div style="font-size: 16px; margin-bottom: 5px;">
+                    ${startLabel} → ${endLabel}
+                </div>
+                <div style="font-size: 20px; font-weight: bold;">
+                    ${isWinner ? '当たり！🎉' : 'はずれ 😢'}
+                </div>
+            `;
             
+            resultMessage.innerHTML = '';
+            resultMessage.appendChild(resultText);
             resultMessage.style.display = 'block';
+            
+            // Scroll result message into view
+            setTimeout(() => {
+                resultMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 500);
             
             // Enable buttons
             resetBtn.disabled = false;
@@ -869,10 +1048,90 @@
             resetBtn.disabled = true;
         }
 
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            generateAmidakuji();
-        });
+        // Handle intersection observer for keeping animation in view
+        const observer = new IntersectionObserver((entries) => {
+            // If canvas container is not visible and we're tracing, pause animation
+            if (isTracing && !entries[0].isIntersecting) {
+                cancelAnimationFrame(animationFrame);
+                
+                // Resume when back in view
+                // We'll just add a message to let the user know
+                const message = document.createElement('div');
+                message.textContent = 'スクロールしてアニメーションを再開';
+                message.style.position = 'absolute';
+                message.style.top = '50%';
+                message.style.left = '50%';
+                message.style.transform = 'translate(-50%, -50%)';
+                message.style.background = 'rgba(0,0,0,0.7)';
+                message.style.color = 'white';
+                message.style.padding = '10px';
+                message.style.borderRadius = '4px';
+                message.style.zIndex = '100';
+                
+                canvasContainer.appendChild(message);
+                
+                const resumeAnimation = () => {
+                    if (message.parentNode) {
+                        canvasContainer.removeChild(message);
+                    }
+                    
+                    if (isTracing) {
+                        animationFrame = requestAnimationFrame(animateTrace);
+                    }
+                    
+                    canvasContainer.removeEventListener('click', resumeAnimation);
+                };
+                
+                canvasContainer.addEventListener('click', resumeAnimation);
+            } else if (isTracing && entries[0].isIntersecting) {
+                // Resume animation if we were paused
+                animationFrame = requestAnimationFrame(animateTrace);
+            }
+        }, { threshold: 0.5 });
+        
+        // Observe the canvas container
+        observer.observe(canvasContainer);
+        
+        // Add swipe support for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        
+        canvasContainer.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, false);
+        
+        canvasContainer.addEventListener('touchend', (e) => {
+            if (!e.changedTouches[0]) return;
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            
+            const diffX = touchEndX - touchStartX;
+            const diffY = touchEndY - touchStartY;
+            
+            // If it's more of a click than a swipe, handle as click
+            if (Math.abs(diffX) < 10 && Math.abs(diffY) < 10) {
+                return; // Let the click handler deal with it
+            }
+            
+            // Handle horizontal swipe
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) {
+                    // Swipe right - go to next start position
+                    if (selectedStartColumn < numColumns - 1) {
+                        selectedStartColumn++;
+                        startColumnRadios[selectedStartColumn].checked = true;
+                    }
+                } else {
+                    // Swipe left - go to previous start position
+                    if (selectedStartColumn > 0) {
+                        selectedStartColumn--;
+                        startColumnRadios[selectedStartColumn].checked = true;
+                    }
+                }
+            }
+        }, false);
     </script>
 </body>
 </html>
