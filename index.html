@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>まこのあみだ - モバイル対応版</title>
+    <title>まこのあみだ -</title>
     <style>
         :root {
             --primary: #4361ee;
@@ -52,6 +52,20 @@
             font-size: 1.5rem;
             margin: 0;
             color: var(--secondary);
+        }
+        
+        h3 {
+            font-size: 1.1rem;
+            margin: 0 0 10px 0;
+            color: var(--secondary);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+        }
+        
+        h4 {
+            font-size: 0.9rem;
+            margin: 10px 0 5px 0;
+            color: var(--dark);
         }
         
         .game-container {
@@ -123,6 +137,19 @@
         input[type="range"] {
             flex: 1;
             height: 28px; /* Taller for easier touch */
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
         }
         
         .button-group {
@@ -210,6 +237,41 @@
             animation: fadeIn 0.5s forwards;
         }
         
+        /* Label editor styles */
+        .label-editor {
+            margin-top: 15px;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .label-section {
+            margin-bottom: 15px;
+        }
+        
+        .label-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+        }
+        
+        .label-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .label-input-group label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .winner-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 3px;
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -264,6 +326,10 @@
                 padding: 10px;
                 gap: 10px;
             }
+            
+            .label-inputs {
+                grid-template-columns: 1fr;
+            }
         }
         
         /* Responsive layout */
@@ -279,7 +345,7 @@
             
             .controls {
                 flex: 1;
-                max-width: 300px;
+                max-width: 350px;
                 margin: 10px;
                 max-height: calc(100vh - 80px);
                 overflow-y: auto;
@@ -294,7 +360,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>まこのあみだ</h1>
+            <h1>まこのあみだ_</h1>
         </header>
         
         <div class="game-container">
@@ -337,6 +403,32 @@
                 
                 <div class="result-container">
                     <div class="result-message" id="resultMessage"></div>
+                </div>
+                
+                <!-- スタートとゴールの名前編集エリア -->
+                <div class="label-editor" id="labelEditor">
+                    <h3>スタートとゴールの名前を編集</h3>
+                    
+                    <div class="label-section">
+                        <h4>スタート名</h4>
+                        <div class="label-inputs" id="startLabelInputs">
+                            <!-- Start label inputs will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="label-section">
+                        <h4>ゴール名</h4>
+                        <div class="label-inputs" id="endLabelInputs">
+                            <!-- End label inputs will be generated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="label-section">
+                        <h4>当たり設定</h4>
+                        <div class="label-inputs" id="winnerInputs">
+                            <!-- Winner inputs will be generated here -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -410,6 +502,9 @@
         let endLabels = [];
         let winners = [];
         let devicePixelRatio = window.devicePixelRatio || 1;
+        let startLabelInputs = [];
+        let endLabelInputs = [];
+        let winnerCheckboxes = [];
         
         // Set up event listeners
         generateBtn.addEventListener('click', generateAmidakuji);
@@ -543,6 +638,91 @@
             });
         }
         
+        // Create label editors
+        function createLabelEditors() {
+            // Clear existing inputs
+            startLabelInputs = [];
+            endLabelInputs = [];
+            winnerCheckboxes = [];
+            
+            const startLabelsContainer = document.getElementById('startLabelInputs');
+            const endLabelsContainer = document.getElementById('endLabelInputs');
+            const winnerInputsContainer = document.getElementById('winnerInputs');
+            
+            startLabelsContainer.innerHTML = '';
+            endLabelsContainer.innerHTML = '';
+            winnerInputsContainer.innerHTML = '';
+            
+            // Create inputs for each column
+            for (let i = 0; i < numColumns; i++) {
+                // Start label inputs
+                const startLabelGroup = document.createElement('div');
+                startLabelGroup.className = 'label-input-group';
+                
+                const startLabel = document.createElement('label');
+                startLabel.htmlFor = `start-label-${i}`;
+                startLabel.textContent = `${i + 1}番`;
+                
+                const startInput = document.createElement('input');
+                startInput.type = 'text';
+                startInput.id = `start-label-${i}`;
+                startInput.value = startLabels[i] || `スタート ${i + 1}`;
+                startInput.addEventListener('input', () => {
+                    startLabels[i] = startInput.value;
+                    drawAmidakuji();
+                });
+                
+                startLabelGroup.appendChild(startLabel);
+                startLabelGroup.appendChild(startInput);
+                startLabelsContainer.appendChild(startLabelGroup);
+                startLabelInputs.push(startInput);
+                
+                // End label inputs
+                const endLabelGroup = document.createElement('div');
+                endLabelGroup.className = 'label-input-group';
+                
+                const endLabel = document.createElement('label');
+                endLabel.htmlFor = `end-label-${i}`;
+                endLabel.textContent = `${i + 1}番`;
+                
+                const endInput = document.createElement('input');
+                endInput.type = 'text';
+                endInput.id = `end-label-${i}`;
+                endInput.value = endLabels[i] || `ゴール ${i + 1}`;
+                endInput.addEventListener('input', () => {
+                    endLabels[i] = endInput.value;
+                    drawAmidakuji();
+                });
+                
+                endLabelGroup.appendChild(endLabel);
+                endLabelGroup.appendChild(endInput);
+                endLabelsContainer.appendChild(endLabelGroup);
+                endLabelInputs.push(endInput);
+                
+                // Winner inputs (checkboxes)
+                const winnerGroup = document.createElement('div');
+                winnerGroup.className = 'winner-checkbox';
+                
+                const winnerCheckbox = document.createElement('input');
+                winnerCheckbox.type = 'checkbox';
+                winnerCheckbox.id = `winner-${i}`;
+                winnerCheckbox.checked = winners[i] || false;
+                winnerCheckbox.addEventListener('change', () => {
+                    winners[i] = winnerCheckbox.checked;
+                    drawAmidakuji();
+                });
+                
+                const winnerLabel = document.createElement('label');
+                winnerLabel.htmlFor = `winner-${i}`;
+                winnerLabel.textContent = `${i + 1}番が当たり`;
+                
+                winnerGroup.appendChild(winnerCheckbox);
+                winnerGroup.appendChild(winnerLabel);
+                winnerInputsContainer.appendChild(winnerGroup);
+                winnerCheckboxes.push(winnerCheckbox);
+            }
+        }
+        
         function generateAmidakuji() {
             // Get input values
             numColumns = parseInt(columnsInput.value);
@@ -574,14 +754,39 @@
             // Ensure canvas is properly sized
             adjustCanvasToContainer();
             
-            // Initialize labels and winners
-            startLabels = Array(numColumns).fill().map((_, i) => `スタート ${i + 1}`);
-            endLabels = Array(numColumns).fill().map((_, i) => `ゴール ${i + 1}`);
-            winners = Array(numColumns).fill(false);
-            
-            // Choose a random winner
-            const randomWinnerIndex = Math.floor(Math.random() * numColumns);
-            winners[randomWinnerIndex] = true;
+            // Initialize or preserve labels
+            if (startLabels.length !== numColumns) {
+                // If it's a new size, create new labels
+                startLabels = Array(numColumns).fill().map((_, i) => `スタート ${i + 1}`);
+                endLabels = Array(numColumns).fill().map((_, i) => `ゴール ${i + 1}`);
+                winners = Array(numColumns).fill(false);
+                
+                // Choose a random winner
+                const randomWinnerIndex = Math.floor(Math.random() * numColumns);
+                winners[randomWinnerIndex] = true;
+            } else {
+                // If same size, preserve existing labels but ensure arrays are right size
+                startLabels = startLabels.slice(0, numColumns);
+                while (startLabels.length < numColumns) {
+                    startLabels.push(`スタート ${startLabels.length + 1}`);
+                }
+                
+                endLabels = endLabels.slice(0, numColumns);
+                while (endLabels.length < numColumns) {
+                    endLabels.push(`ゴール ${endLabels.length + 1}`);
+                }
+                
+                winners = winners.slice(0, numColumns);
+                while (winners.length < numColumns) {
+                    winners.push(false);
+                }
+                
+                // Make sure at least one winner exists
+                if (!winners.includes(true)) {
+                    const randomWinnerIndex = Math.floor(Math.random() * numColumns);
+                    winners[randomWinnerIndex] = true;
+                }
+            }
             
             // Generate horizontal lines with improved distribution
             horizontalLines = [];
@@ -632,6 +837,9 @@
             // Generate start column selector
             generateStartColumnSelector();
             
+            // Create label editors
+            createLabelEditors();
+            
             // Draw the Amidakuji
             drawAmidakuji();
             
@@ -672,7 +880,7 @@
                 // Draw start labels
                 ctx.fillStyle = '#4361ee';
                 ctx.font = 'bold 14px Arial'; // Larger for mobile
-                ctx.fillText(startLabels[i], x, TOP_MARGIN - 40);
+                ctx.fillText(startLabels[i] || `スタート ${i+1}`, x, TOP_MARGIN - 40);
                 
                 // Add end position markers
                 ctx.fillStyle = '#f72585';
@@ -683,7 +891,7 @@
                 // Draw end labels
                 ctx.fillStyle = '#f72585';
                 ctx.font = 'bold 14px Arial'; // Larger for mobile
-                ctx.fillText(endLabels[i], x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 35);
+                ctx.fillText(endLabels[i] || `ゴール ${i+1}`, x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 35);
                 
                 // Draw winner marker if this is a winner
                 if (winners[i]) {
@@ -732,6 +940,15 @@
                     ctx.beginPath();
                     ctx.arc(tracePosition.x, tracePosition.y, TRACER_RADIUS, 0, Math.PI * 2);
                     ctx.fill();
+                }
+            }
+            
+            // Update label inputs if they exist
+            if (startLabelInputs.length > 0) {
+                for (let i = 0; i < numColumns && i < startLabelInputs.length; i++) {
+                    startLabelInputs[i].value = startLabels[i] || `スタート ${i+1}`;
+                    endLabelInputs[i].value = endLabels[i] || `ゴール ${i+1}`;
+                    winnerCheckboxes[i].checked = winners[i] || false;
                 }
             }
         }
