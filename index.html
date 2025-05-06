@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>まこのあみだ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>まこのあみだ - モバイル対応版</title>
     <style>
         :root {
             --primary: #4361ee;
@@ -28,22 +28,24 @@
             background-color: #f5f7fa;
             color: var(--dark);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
         
         .container {
-            display: grid;
-            grid-template-rows: auto 1fr;
+            display: flex;
+            flex-direction: column;
             height: 100vh;
-            padding: 10px;
-            gap: 8px;
+            width: 100%;
+            overflow-x: hidden;
         }
         
         header {
             text-align: center;
             padding: 10px 0;
+            background-color: white;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
         
         h1 {
@@ -52,63 +54,94 @@
             color: var(--secondary);
         }
         
-        .game-area {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 10px;
-            height: 100%;
-            min-height: 400px;
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 60px); /* Adjust based on header height */
+            overflow: hidden;
+        }
+        
+        .canvas-container {
+            flex: 1;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            touch-action: manipulation;
+        }
+        
+        canvas {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
         }
         
         .controls {
             background: white;
             border-radius: var(--radius);
-            padding: 12px;
+            padding: 15px;
             box-shadow: var(--shadow);
+            margin: 0 10px 10px 10px;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            height: 100%;
+            gap: 15px;
             overflow-y: auto;
         }
         
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
         
         .input-group {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
         
         label {
             font-size: 14px;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         input[type="number"] {
             width: 60px;
-            padding: 8px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 6px;
             text-align: center;
+            font-size: 16px; /* Larger for mobile */
         }
         
         input[type="range"] {
             flex: 1;
+            height: 28px; /* Taller for easier touch */
+        }
+        
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .btn {
-            padding: 10px 16px;
+            padding: 12px 16px;
             border: none;
             border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            font-size: 14px;
+            font-size: 16px;
+            flex: 1;
+            min-width: 120px;
+            touch-action: manipulation;
         }
         
         .btn-primary {
@@ -123,69 +156,57 @@
         
         .btn:hover {
             opacity: 0.9;
-            transform: translateY(-1px);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
         }
         
         .btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
-            transform: none;
         }
         
         .start-selector {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
         }
         
         .start-selector-label {
             font-weight: 600;
             font-size: 14px;
+            margin-right: 10px;
+        }
+        
+        .radio-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
         
         .radio-container {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
         
-        .button-group {
-            display: flex;
-            gap: 8px;
-        }
-        
-        .canvas-container {
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 10px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
-        
-        canvas {
-            max-width: 100%;
-            max-height: 100%;
+        .radio-container input[type="radio"] {
+            width: 18px;
+            height: 18px;
         }
         
         .result-container {
-            padding: 10px;
+            padding: 10px 0;
         }
         
         .result-message {
-            padding: 12px;
+            padding: 15px;
             border-radius: var(--radius);
             font-weight: bold;
             text-align: center;
             display: none;
-            opacity: 0;
-            transition: opacity 0.5s;
             animation: fadeIn 0.5s forwards;
         }
         
@@ -206,98 +227,66 @@
             border: 1px solid var(--lose);
         }
         
-        .label-editor {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
-        }
-        
-        .label-group {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 10px;
-        }
-        
-        .label-input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        
-        .label-input-group label {
-            font-size: 12px;
-            color: #666;
-        }
-        
-        .label-input-group input {
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        
-        .winner-checkbox {
+        /* Toggle button for controls */
+        .controls-toggle {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
             display: flex;
             align-items: center;
-            gap: 5px;
-            margin-top: 3px;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: var(--shadow);
+            z-index: 100;
+            cursor: pointer;
+            touch-action: manipulation;
         }
         
-        .winner-checkbox input {
-            margin: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .game-area {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto 1fr;
+        /* For very small screens */
+        @media (max-width: 375px) {
+            .btn {
+                padding: 10px 12px;
+                font-size: 14px;
+                min-width: 100px;
+            }
+            
+            input[type="number"] {
+                width: 50px;
+                padding: 8px;
             }
             
             .controls {
                 padding: 10px;
-            }
-            
-            .btn {
-                padding: 8px 12px;
-                font-size: 13px;
-            }
-            
-            h1 {
-                font-size: 1.3rem;
-            }
-            
-            .control-group {
-                gap: 6px;
+                gap: 10px;
             }
         }
         
-        /* For even smaller screens */
-        @media (max-width: 480px) {
-            .input-group {
-                flex-direction: column;
-                align-items: flex-start;
+        /* Responsive layout */
+        @media (min-width: 768px) {
+            .game-container {
+                flex-direction: row;
             }
             
-            .input-group input[type="range"] {
-                width: 100%;
+            .canvas-container {
+                flex: 2;
+                margin: 10px;
             }
             
-            .button-group {
-                flex-direction: column;
+            .controls {
+                flex: 1;
+                max-width: 300px;
+                margin: 10px;
+                max-height: calc(100vh - 80px);
+                overflow-y: auto;
             }
             
-            .start-selector {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .radio-options {
-                display: flex;
-                flex-wrap: wrap;
-                gap: 5px;
+            .controls-toggle {
+                display: none;
             }
         }
     </style>
@@ -308,7 +297,11 @@
             <h1>まこのあみだ</h1>
         </header>
         
-        <div class="game-area">
+        <div class="game-container">
+            <div class="canvas-container">
+                <canvas id="amidakuji"></canvas>
+            </div>
+            
             <div class="controls">
                 <div class="control-group">
                     <div class="input-group">
@@ -320,37 +313,36 @@
                         <input type="number" id="horizontalLines" min="3" max="30" value="10">
                     </div>
                     <div class="input-group">
-                        <label for="speedSlider">アニメーション速度:</label>
+                        <label for="speedSlider">速度:</label>
                         <input type="range" id="speedSlider" min="1" max="10" value="5">
                         <span id="speedValue">5</span>
                     </div>
+                </div>
                 
-                    <div class="button-group">
-                        <button id="generateBtn" class="btn btn-primary">あみだくじを生成</button>
+                <div class="button-group">
+                    <button id="generateBtn" class="btn btn-primary">あみだくじを生成</button>
+                </div>
+                
+                <div class="start-selector" id="startSelector">
+                    <span class="start-selector-label">スタート位置:</span>
+                    <div class="radio-options">
+                        <!-- Start column selector will be generated here -->
                     </div>
-                    
-                    <div class="start-selector" id="startSelector">
-                        <span class="start-selector-label">スタート位置:</span>
-                        <div class="radio-options">
-                            <!-- Start column selector will be generated here -->
-                        </div>
-                    </div>
-                    
-                    <div class="button-group">
-                        <button id="traceBtn" disabled class="btn btn-secondary">トレースする</button>
-                        <button id="resetBtn" disabled class="btn btn-secondary">リセット</button>
-                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="traceBtn" disabled class="btn btn-secondary">トレースする</button>
+                    <button id="resetBtn" disabled class="btn btn-secondary">リセット</button>
                 </div>
                 
                 <div class="result-container">
                     <div class="result-message" id="resultMessage"></div>
                 </div>
             </div>
-            
-            <div class="canvas-container">
-                <canvas id="amidakuji"></canvas>
-            </div>
         </div>
+        
+        <!-- Toggle button for mobile -->
+        <div class="controls-toggle" id="controlsToggle">≡</div>
     </div>
 
     <script>
@@ -367,21 +359,38 @@
         const startSelector = document.getElementById('startSelector').querySelector('.radio-options');
         const resultMessage = document.getElementById('resultMessage');
         const canvasContainer = document.querySelector('.canvas-container');
+        const controls = document.querySelector('.controls');
+        const controlsToggle = document.getElementById('controlsToggle');
         
-        // 編集用テキストボックスを生成するための要素
-        let startLabelInputs = [];
-        let endLabelInputs = [];
-        let winnerCheckboxes = [];
-
+        // Mobile optimization - toggle controls
+        let controlsVisible = true;
+        
+        function toggleControls() {
+            if (window.innerWidth < 768) { // Only on mobile
+                controlsVisible = !controlsVisible;
+                
+                if (controlsVisible) {
+                    controls.style.display = 'flex';
+                    controlsToggle.textContent = '≡';
+                } else {
+                    controls.style.display = 'none';
+                    controlsToggle.textContent = '⚙️';
+                }
+            }
+        }
+        
+        controlsToggle.addEventListener('click', toggleControls);
+        
+        // Variables for amidakuji
         // Constants for vertical layout - 可変にする
-        let HORIZONTAL_SPACING = 50;  // Space between vertical lines
+        let HORIZONTAL_SPACING = 60;  // Space between vertical lines
         let VERTICAL_SPACING = 40;    // Space between horizontal levels
         const TOP_MARGIN = 70;          // Space at the top (increased for labels)
         const LEFT_MARGIN = 50;         // Space at the left
-        const LINE_WIDTH = 2;           // Width of lines
-        const TRACER_RADIUS = 6;        // Radius of the tracer circle
+        const LINE_WIDTH = 3;           // Width of lines (increased for mobile)
+        const TRACER_RADIUS = 8;        // Radius of the tracer circle (increased for mobile)
         const BOTTOM_MARGIN = 80;       // Space at the bottom (increased for labels)
-
+        
         // Variables
         let numColumns = parseInt(columnsInput.value);
         let numHorizontalLines = parseInt(horizontalLinesInput.value);
@@ -400,309 +409,97 @@
         let startLabels = [];
         let endLabels = [];
         let winners = [];
-        let editingLabel = null;
-        let clickAreas = [];
-
+        let devicePixelRatio = window.devicePixelRatio || 1;
+        
         // Set up event listeners
         generateBtn.addEventListener('click', generateAmidakuji);
         traceBtn.addEventListener('click', startTracing);
         resetBtn.addEventListener('click', resetTrace);
         speedSlider.addEventListener('input', updateSpeed);
-        canvas.addEventListener('click', handleCanvasClick);
         
-        // Make canvas responsive to container
+        // Add touch event listeners for better mobile experience
+        canvas.addEventListener('touchstart', handleCanvasTouch);
         window.addEventListener('resize', adjustCanvasToContainer);
+        
+        // Handle touch events on canvas
+        function handleCanvasTouch(e) {
+            // Prevent default to avoid scrolling while interacting with canvas
+            e.preventDefault();
+            
+            if (!isTracing && horizontalLines.length > 0) {
+                // Check if touch is near a starting point
+                const touch = e.touches[0];
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                
+                const touchX = (touch.clientX - rect.left) * scaleX;
+                const touchY = (touch.clientY - rect.top) * scaleY;
+                
+                // Check each starting point
+                for (let i = 0; i < numColumns; i++) {
+                    const startX = i * HORIZONTAL_SPACING + LEFT_MARGIN;
+                    const startY = TOP_MARGIN;
+                    
+                    // Calculate distance from touch to starting point
+                    const distance = Math.sqrt(Math.pow(touchX - startX, 2) + Math.pow(touchY - startY, 2));
+                    
+                    if (distance < 30) { // Increased touch area
+                        // Select this starting column
+                        selectedStartColumn = i;
+                        if (startColumnRadios[i]) {
+                            startColumnRadios[i].checked = true;
+                        }
+                        
+                        // Start tracing from this point if trace button is enabled
+                        if (!traceBtn.disabled) {
+                            startTracing();
+                        }
+                        break;
+                    }
+                }
+            }
+        }
         
         // Function to update animation speed
         function updateSpeed() {
             animationSpeed = parseInt(speedSlider.value);
             speedValue.textContent = animationSpeed;
         }
-
-        // Function to adjust canvas to container size
+        
+        // Function to adjust canvas to container size with hi-DPI support
         function adjustCanvasToContainer() {
+            // Get the current device pixel ratio
+            devicePixelRatio = window.devicePixelRatio || 1;
+            
             const containerRect = canvasContainer.getBoundingClientRect();
             
             // Determine available width and height
-            const availableWidth = containerRect.width - 20; // 20px padding
-            const availableHeight = containerRect.height - 20; // 20px padding
+            const availableWidth = containerRect.width;
+            const availableHeight = containerRect.height;
             
-            // Determine scale factor based on the smaller dimension
-            const scaleX = availableWidth / canvasWidth;
-            const scaleY = availableHeight / canvasHeight;
-            // より大きく表示するために、1より大きいスケールも許可する（拡大する）
-            const scale = Math.min(scaleX, scaleY);
+            // Fix for mobile: ensure we have minimum dimensions
+            const minWidth = Math.max(320, availableWidth);
+            const minHeight = Math.max(400, availableHeight);
             
-            // Apply scale
-            canvas.style.transformOrigin = 'center';
-            canvas.style.transform = `scale(${scale})`;
+            // Set canvas logical size (CSS pixels)
+            canvas.style.width = `${minWidth}px`;
+            canvas.style.height = `${minHeight}px`;
+            
+            // Set the canvas physical size (actual pixels) - accounting for hi-DPI screens
+            canvas.width = Math.floor(minWidth * devicePixelRatio);
+            canvas.height = Math.floor(minHeight * devicePixelRatio);
+            
+            // Scale all drawing operations by the device pixel ratio
+            ctx.scale(devicePixelRatio, devicePixelRatio);
+            
+            // If we have an amidakuji already generated, redraw it
+            if (horizontalLines.length > 0) {
+                drawAmidakuji();
+            }
         }
         
-        // Function to create label editors
-        function createLabelEditors() {
-            // Create label editor container if it doesn't exist
-            if (!document.querySelector('.label-editor')) {
-                const controls = document.querySelector('.controls');
-                
-                const labelEditor = document.createElement('div');
-                labelEditor.className = 'label-editor';
-                
-                const startLabelSection = document.createElement('div');
-                startLabelSection.innerHTML = '<h3>スタートラベル編集</h3>';
-                const startLabelGroup = document.createElement('div');
-                startLabelGroup.className = 'label-group';
-                startLabelGroup.id = 'start-label-group';
-                startLabelSection.appendChild(startLabelGroup);
-                
-                const endLabelSection = document.createElement('div');
-                endLabelSection.innerHTML = '<h3>ゴールラベル編集</h3>';
-                const endLabelGroup = document.createElement('div');
-                endLabelGroup.className = 'label-group';
-                endLabelGroup.id = 'end-label-group';
-                endLabelSection.appendChild(endLabelGroup);
-                
-                labelEditor.appendChild(startLabelSection);
-                labelEditor.appendChild(endLabelSection);
-                
-                controls.appendChild(labelEditor);
-            }
-            
-            // Clear existing inputs
-            startLabelInputs = [];
-            endLabelInputs = [];
-            winnerCheckboxes = [];
-            
-            const startLabelGroup = document.getElementById('start-label-group');
-            const endLabelGroup = document.getElementById('end-label-group');
-            
-            startLabelGroup.innerHTML = '';
-            endLabelGroup.innerHTML = '';
-            
-            // Create inputs for each column
-            for (let i = 0; i < numColumns; i++) {
-                // Start label input
-                const startLabelContainer = document.createElement('div');
-                startLabelContainer.className = 'label-input-group';
-                
-                const startLabelLabel = document.createElement('label');
-                startLabelLabel.htmlFor = `start-label-${i}`;
-                startLabelLabel.textContent = `スタート ${i + 1}`;
-                
-                const startInput = document.createElement('input');
-                startInput.type = 'text';
-                startInput.id = `start-label-${i}`;
-                startInput.value = startLabels[i];
-                startInput.addEventListener('input', () => {
-                    startLabels[i] = startInput.value;
-                    drawAmidakuji();
-                });
-                
-                startLabelContainer.appendChild(startLabelLabel);
-                startLabelContainer.appendChild(startInput);
-                startLabelGroup.appendChild(startLabelContainer);
-                
-                startLabelInputs.push(startInput);
-                
-                // End label input
-                const endLabelContainer = document.createElement('div');
-                endLabelContainer.className = 'label-input-group';
-                
-                const endLabelLabel = document.createElement('label');
-                endLabelLabel.htmlFor = `end-label-${i}`;
-                endLabelLabel.textContent = `ゴール ${i + 1}`;
-                
-                const endInput = document.createElement('input');
-                endInput.type = 'text';
-                endInput.id = `end-label-${i}`;
-                endInput.value = endLabels[i];
-                endInput.addEventListener('input', () => {
-                    endLabels[i] = endInput.value;
-                    drawAmidakuji();
-                });
-                
-                const winnerCheckboxContainer = document.createElement('div');
-                winnerCheckboxContainer.className = 'winner-checkbox';
-                
-                const winnerCheckbox = document.createElement('input');
-                winnerCheckbox.type = 'checkbox';
-                winnerCheckbox.id = `winner-${i}`;
-                winnerCheckbox.checked = winners[i];
-                winnerCheckbox.addEventListener('change', () => {
-                    winners[i] = winnerCheckbox.checked;
-                    drawAmidakuji();
-                });
-                
-                const winnerLabel = document.createElement('label');
-                winnerLabel.htmlFor = `winner-${i}`;
-                winnerLabel.textContent = '当たり';
-                
-                winnerCheckboxContainer.appendChild(winnerCheckbox);
-                winnerCheckboxContainer.appendChild(winnerLabel);
-                
-                endLabelContainer.appendChild(endLabelLabel);
-                endLabelContainer.appendChild(endInput);
-                endLabelContainer.appendChild(winnerCheckboxContainer);
-                endLabelGroup.appendChild(endLabelContainer);
-                
-                endLabelInputs.push(endInput);
-                winnerCheckboxes.push(winnerCheckbox);
-            }
-        }
-
-        // Handle canvas click - キャンバスクリックの処理は削除（テキストボックスでの編集に置き換え）
-        function handleCanvasClick(e) {
-            // クリック処理は不要になったが、念の為空の関数を残しておく
-        }
-        
-        // Toggle winner
-        function toggleWinner(index) {
-            winners[index] = !winners[index];
-            
-            // テキストボックス編集モードの場合はチェックボックスを更新
-            if (winnerCheckboxes[index]) {
-                winnerCheckboxes[index].checked = winners[index];
-            }
-            
-            drawAmidakuji();
-        }
-
-        function generateAmidakuji() {
-            // Get input values
-            numColumns = parseInt(columnsInput.value);
-            numHorizontalLines = parseInt(horizontalLinesInput.value);
-
-            // Validate input
-            if (numColumns < 2) numColumns = 2;
-            if (numColumns > 10) numColumns = 10;
-            if (numHorizontalLines < 3) numHorizontalLines = 3;
-            if (numHorizontalLines > 30) numHorizontalLines = 30;
-
-            // Update input values
-            columnsInput.value = numColumns;
-            horizontalLinesInput.value = numHorizontalLines;
-
-            // Reset tracing state
-            resetTrace();
-
-            // Reset result message
-            resultMessage.style.display = 'none';
-
-            // Calculate canvas dimensions based on content
-            // 列の数に合わせて水平方向のスペースを広げる
-            const horizontalSpacingAdjusted = Math.max(50, Math.min(80, 600 / numColumns));
-            HORIZONTAL_SPACING = horizontalSpacingAdjusted;
-            
-            canvasWidth = numColumns * HORIZONTAL_SPACING + LEFT_MARGIN * 2;
-            canvasWidth = Math.max(canvasWidth, 300); // Minimum width
-            
-            // 横線の数に合わせて垂直方向のスペースを広げる
-            const verticalSpacingAdjusted = Math.max(40, Math.min(60, 600 / numHorizontalLines));
-            VERTICAL_SPACING = verticalSpacingAdjusted;
-            
-            // Calculate height based on the number of horizontal lines
-            canvasHeight = numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + BOTTOM_MARGIN;
-            
-            // Set canvas dimensions
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
-            
-            // Apply responsive scaling
-            adjustCanvasToContainer();
-
-            // Initialize labels and winners if not already set
-            if (startLabels.length !== numColumns) {
-                startLabels = Array(numColumns).fill().map((_, i) => `スタート ${i + 1}`);
-            } else {
-                // Keep existing labels but ensure array is right size
-                startLabels = startLabels.slice(0, numColumns);
-                while (startLabels.length < numColumns) {
-                    startLabels.push(`スタート ${startLabels.length + 1}`);
-                }
-            }
-            
-            if (endLabels.length !== numColumns) {
-                endLabels = Array(numColumns).fill().map((_, i) => `ゴール ${i + 1}`);
-            } else {
-                // Keep existing labels but ensure array is right size
-                endLabels = endLabels.slice(0, numColumns);
-                while (endLabels.length < numColumns) {
-                    endLabels.push(`ゴール ${endLabels.length + 1}`);
-                }
-            }
-            
-            if (winners.length !== numColumns) {
-                winners = Array(numColumns).fill(false);
-            } else {
-                // Keep existing winners but ensure array is right size
-                winners = winners.slice(0, numColumns);
-                while (winners.length < numColumns) {
-                    winners.push(false);
-                }
-            }
-
-            // Generate horizontal lines with improved distribution
-            horizontalLines = [];
-            
-            // Create a 2D grid to track where horizontal lines are placed
-            // This helps us avoid overlapping lines
-            const grid = [];
-            for (let i = 0; i < numHorizontalLines; i++) {
-                grid[i] = [];
-                for (let j = 0; j < numColumns - 1; j++) {
-                    grid[i][j] = false;
-                }
-            }
-            
-            // Add horizontal lines with better distribution
-            // We'll aim for around 30-40% of possible connections to have lines
-            const targetLineCount = Math.floor((numHorizontalLines * (numColumns - 1)) * 0.35);
-            let lineCount = 0;
-            
-            // First pass: add lines randomly but with constraints
-            while (lineCount < targetLineCount && lineCount < numHorizontalLines * (numColumns - 1)) {
-                const level = Math.floor(Math.random() * numHorizontalLines);
-                const column = Math.floor(Math.random() * (numColumns - 1));
-                
-                // Check if this spot and adjacent spots are empty
-                // We don't want lines at the same level next to each other
-                if (!grid[level][column]) {
-                    // Check if there's a line directly to the left or right
-                    const hasAdjacentLine = 
-                        (column > 0 && grid[level][column - 1]) || 
-                        (column < numColumns - 2 && grid[level][column + 1]);
-                    
-                    // No connections at the very top (level 0) to prevent start connections
-                    if (level === 0) {
-                        continue;
-                    }
-                    
-                    // Only add the line if there's no adjacent line at the same level
-                    if (!hasAdjacentLine) {
-                        grid[level][column] = true;
-                        horizontalLines.push({
-                            level: level,
-                            column: column
-                        });
-                        lineCount++;
-                    }
-                }
-            }
-
-            // Generate start column selector
-            generateStartColumnSelector();
-            
-            // Create label editors
-            createLabelEditors();
-
-            // Draw the Amidakuji
-            drawAmidakuji();
-
-            // Enable trace button
-            traceBtn.disabled = false;
-            resetBtn.disabled = true;
-        }
-
-        // Function to generate start column selector
+        // Generate start column selector
         function generateStartColumnSelector() {
             startSelector.innerHTML = '';
             startColumnRadios = [];
@@ -717,6 +514,10 @@
                 radio.id = `start-column-${i}`;
                 radio.value = i;
                 radio.checked = i === 0; // Select the first one by default
+                
+                // Make radio buttons larger for mobile
+                radio.style.width = '20px';
+                radio.style.height = '20px';
                 
                 const label = document.createElement('label');
                 label.htmlFor = `start-column-${i}`;
@@ -741,17 +542,113 @@
                 });
             });
         }
-
+        
+        function generateAmidakuji() {
+            // Get input values
+            numColumns = parseInt(columnsInput.value);
+            numHorizontalLines = parseInt(horizontalLinesInput.value);
+            
+            // Validate input
+            if (numColumns < 2) numColumns = 2;
+            if (numColumns > 10) numColumns = 10;
+            if (numHorizontalLines < 3) numHorizontalLines = 3;
+            if (numHorizontalLines > 30) numHorizontalLines = 30;
+            
+            // Update input values
+            columnsInput.value = numColumns;
+            horizontalLinesInput.value = numHorizontalLines;
+            
+            // Reset tracing state
+            resetTrace();
+            
+            // Reset result message
+            resultMessage.style.display = 'none';
+            
+            // Adjust spacing based on number of columns and lines
+            // 列の数に合わせて水平方向のスペースを調整
+            HORIZONTAL_SPACING = Math.max(40, Math.min(80, (canvas.width / devicePixelRatio - LEFT_MARGIN * 2) / numColumns));
+            
+            // 横線の数に合わせて垂直方向のスペースを調整
+            VERTICAL_SPACING = Math.max(30, Math.min(60, (canvas.height / devicePixelRatio - TOP_MARGIN - BOTTOM_MARGIN) / numHorizontalLines));
+            
+            // Ensure canvas is properly sized
+            adjustCanvasToContainer();
+            
+            // Initialize labels and winners
+            startLabels = Array(numColumns).fill().map((_, i) => `スタート ${i + 1}`);
+            endLabels = Array(numColumns).fill().map((_, i) => `ゴール ${i + 1}`);
+            winners = Array(numColumns).fill(false);
+            
+            // Choose a random winner
+            const randomWinnerIndex = Math.floor(Math.random() * numColumns);
+            winners[randomWinnerIndex] = true;
+            
+            // Generate horizontal lines with improved distribution
+            horizontalLines = [];
+            
+            // Create a 2D grid to track where horizontal lines are placed
+            const grid = [];
+            for (let i = 0; i < numHorizontalLines; i++) {
+                grid[i] = [];
+                for (let j = 0; j < numColumns - 1; j++) {
+                    grid[i][j] = false;
+                }
+            }
+            
+            // Add horizontal lines with better distribution
+            // We'll aim for around 30-40% of possible connections to have lines
+            const targetLineCount = Math.floor((numHorizontalLines * (numColumns - 1)) * 0.35);
+            let lineCount = 0;
+            
+            // First pass: add lines randomly but with constraints
+            while (lineCount < targetLineCount && lineCount < numHorizontalLines * (numColumns - 1)) {
+                const level = Math.floor(Math.random() * numHorizontalLines);
+                const column = Math.floor(Math.random() * (numColumns - 1));
+                
+                // Check if this spot and adjacent spots are empty
+                if (!grid[level][column]) {
+                    // Check if there's a line directly to the left or right
+                    const hasAdjacentLine = 
+                        (column > 0 && grid[level][column - 1]) || 
+                        (column < numColumns - 2 && grid[level][column + 1]);
+                    
+                    // No connections at the very top (level 0) to prevent start connections
+                    if (level === 0) {
+                        continue;
+                    }
+                    
+                    // Only add the line if there's no adjacent line at the same level
+                    if (!hasAdjacentLine) {
+                        grid[level][column] = true;
+                        horizontalLines.push({
+                            level: level,
+                            column: column
+                        });
+                        lineCount++;
+                    }
+                }
+            }
+            
+            // Generate start column selector
+            generateStartColumnSelector();
+            
+            // Draw the Amidakuji
+            drawAmidakuji();
+            
+            // Enable trace button
+            traceBtn.disabled = false;
+            resetBtn.disabled = true;
+        }
+        
         // Function to draw the Amidakuji
         function drawAmidakuji() {
-            // Clear canvas and click areas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            clickAreas = [];
-
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width / devicePixelRatio, canvas.height / devicePixelRatio);
+            
             // Set line style
             ctx.lineWidth = LINE_WIDTH;
             ctx.strokeStyle = '#333';
-
+            
             // Draw vertical lines
             for (let i = 0; i < numColumns; i++) {
                 const x = i * HORIZONTAL_SPACING + LEFT_MARGIN;
@@ -763,48 +660,44 @@
                 // Add start position markers
                 ctx.fillStyle = '#4361ee';
                 ctx.beginPath();
-                ctx.arc(x, TOP_MARGIN, 4, 0, Math.PI * 2);
+                ctx.arc(x, TOP_MARGIN, 5, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Add column numbers at the top
                 ctx.fillStyle = '#212529';
-                ctx.font = '14px Arial';
+                ctx.font = 'bold 16px Arial'; // Larger for mobile
                 ctx.textAlign = 'center';
                 ctx.fillText((i + 1).toString(), x, TOP_MARGIN - 20);
                 
                 // Draw start labels
                 ctx.fillStyle = '#4361ee';
-                ctx.font = 'bold 12px Arial';
-                ctx.fillText(startLabels[i], x, TOP_MARGIN - 35);
+                ctx.font = 'bold 14px Arial'; // Larger for mobile
+                ctx.fillText(startLabels[i], x, TOP_MARGIN - 40);
                 
                 // Add end position markers
                 ctx.fillStyle = '#f72585';
                 ctx.beginPath();
-                ctx.arc(x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN, 4, 0, Math.PI * 2);
+                ctx.arc(x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN, 5, 0, Math.PI * 2);
                 ctx.fill();
-                
-                // Add column numbers at the bottom
-                ctx.fillStyle = '#212529';
-                ctx.fillText((i + 1).toString(), x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 20);
                 
                 // Draw end labels
                 ctx.fillStyle = '#f72585';
-                ctx.font = 'bold 12px Arial';
+                ctx.font = 'bold 14px Arial'; // Larger for mobile
                 ctx.fillText(endLabels[i], x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 35);
                 
                 // Draw winner marker if this is a winner
                 if (winners[i]) {
                     ctx.fillStyle = '#4cc9f0';
                     ctx.beginPath();
-                    ctx.arc(x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 50, 8, 0, Math.PI * 2);
+                    ctx.arc(x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 55, 10, 0, Math.PI * 2);
                     ctx.fill();
                     
                     ctx.fillStyle = '#212529';
-                    ctx.font = '10px Arial';
-                    ctx.fillText('当たり', x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 65);
+                    ctx.font = '12px Arial';
+                    ctx.fillText('当たり', x, numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN + 75);
                 }
             }
-
+            
             // Draw horizontal lines
             for (const line of horizontalLines) {
                 const y = line.level * VERTICAL_SPACING + TOP_MARGIN;
@@ -818,10 +711,10 @@
                 ctx.lineTo(x2, y);
                 ctx.stroke();
             }
-
+            
             // Draw path if tracing
             if (tracePath.length > 0) {
-                ctx.lineWidth = 3;
+                ctx.lineWidth = 4; // Thicker line for better visibility on mobile
                 ctx.strokeStyle = '#FF5722';
                 
                 ctx.beginPath();
@@ -841,23 +734,8 @@
                     ctx.fill();
                 }
             }
-            
-            // テキスト入力による編集モードの場合は入力を同期
-            if (startLabelInputs.length > 0) {
-                for (let i = 0; i < numColumns; i++) {
-                    if (i < startLabelInputs.length && startLabelInputs[i]) {
-                        startLabelInputs[i].value = startLabels[i];
-                    }
-                    if (i < endLabelInputs.length && endLabelInputs[i]) {
-                        endLabelInputs[i].value = endLabels[i];
-                    }
-                    if (i < winnerCheckboxes.length && winnerCheckboxes[i]) {
-                        winnerCheckboxes[i].checked = winners[i];
-                    }
-                }
-            }
         }
-
+        
         // Function to start tracing
         function startTracing() {
             if (isTracing) return;
@@ -881,13 +759,15 @@
             // Hide any previous result message
             resultMessage.style.display = 'none';
             
-            // Move canvas into view if needed
-            canvasContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            // On mobile, hide controls during animation for more space
+            if (window.innerWidth < 768 && controlsVisible) {
+                toggleControls();
+            }
             
             // Start animation
             animateTrace();
         }
-
+        
         // Function to animate the trace
         function animateTrace() {
             // Speed factor - lower value means faster animation
@@ -969,10 +849,10 @@
             // 再描画
             drawAmidakuji();
             
-            // アニメーション継続 - use requestAnimationFrame for smoother animation
+            // アニメーション継続
             animationFrame = requestAnimationFrame(animateTrace);
         }
-
+        
         // Function to finish tracing
         function finishTrace() {
             isTracing = false;
@@ -989,7 +869,6 @@
             const isWinner = winners[endValue];
             
             // Draw final path one more time to ensure it's visible all the way to bottom
-            // Add a final point at the end position if needed
             const finalY = numHorizontalLines * VERTICAL_SPACING + TOP_MARGIN;
             const finalX = endValue * HORIZONTAL_SPACING + LEFT_MARGIN;
             
@@ -1013,7 +892,7 @@
                 <div style="font-size: 16px; margin-bottom: 5px;">
                     ${startLabel} → ${endLabel}
                 </div>
-                <div style="font-size: 20px; font-weight: bold;">
+                <div style="font-size: 22px; font-weight: bold;">
                     ${isWinner ? '当たり！🎉' : 'はずれ 😢'}
                 </div>
             `;
@@ -1021,6 +900,11 @@
             resultMessage.innerHTML = '';
             resultMessage.appendChild(resultText);
             resultMessage.style.display = 'block';
+            
+            // On mobile, show controls again after animation
+            if (window.innerWidth < 768 && !controlsVisible) {
+                toggleControls();
+            }
             
             // Scroll result message into view
             setTimeout(() => {
@@ -1031,7 +915,7 @@
             resetBtn.disabled = false;
             generateBtn.disabled = false;
         }
-
+        
         // Function to reset the trace
         function resetTrace() {
             if (isTracing) {
@@ -1053,61 +937,17 @@
             generateBtn.disabled = false;
             resetBtn.disabled = true;
         }
-
-        // Handle intersection observer for keeping animation in view
-        const observer = new IntersectionObserver((entries) => {
-            // If canvas container is not visible and we're tracing, pause animation
-            if (isTracing && !entries[0].isIntersecting) {
-                cancelAnimationFrame(animationFrame);
-                
-                // Resume when back in view
-                // We'll just add a message to let the user know
-                const message = document.createElement('div');
-                message.textContent = 'スクロールしてアニメーションを再開';
-                message.style.position = 'absolute';
-                message.style.top = '50%';
-                message.style.left = '50%';
-                message.style.transform = 'translate(-50%, -50%)';
-                message.style.background = 'rgba(0,0,0,0.7)';
-                message.style.color = 'white';
-                message.style.padding = '10px';
-                message.style.borderRadius = '4px';
-                message.style.zIndex = '100';
-                
-                canvasContainer.appendChild(message);
-                
-                const resumeAnimation = () => {
-                    if (message.parentNode) {
-                        canvasContainer.removeChild(message);
-                    }
-                    
-                    if (isTracing) {
-                        animationFrame = requestAnimationFrame(animateTrace);
-                    }
-                    
-                    canvasContainer.removeEventListener('click', resumeAnimation);
-                };
-                
-                canvasContainer.addEventListener('click', resumeAnimation);
-            } else if (isTracing && entries[0].isIntersecting) {
-                // Resume animation if we were paused
-                animationFrame = requestAnimationFrame(animateTrace);
-            }
-        }, { threshold: 0.5 });
         
-        // Observe the canvas container
-        observer.observe(canvasContainer);
-        
-        // Add swipe support for mobile
+        // Swipe support for mobile
         let touchStartX = 0;
         let touchStartY = 0;
         
-        canvasContainer.addEventListener('touchstart', (e) => {
+        canvas.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
-        }, false);
+        }, { passive: false });
         
-        canvasContainer.addEventListener('touchend', (e) => {
+        canvas.addEventListener('touchend', (e) => {
             if (!e.changedTouches[0]) return;
             
             const touchEndX = e.changedTouches[0].clientX;
@@ -1136,11 +976,60 @@
                         startColumnRadios[selectedStartColumn].checked = true;
                     }
                 }
+                
+                // Redraw to show selected column
+                drawAmidakuji();
             }
-        }, false);
+        }, { passive: false });
         
-        // Initialize
-        generateAmidakuji();
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Detect if we're on mobile
+            const isMobile = window.innerWidth < 768;
+            
+            // On mobile, use smaller default values for better fit
+            if (isMobile) {
+                columnsInput.value = 4;
+                horizontalLinesInput.value = 8;
+            }
+            
+            // Generate the initial amidakuji
+            generateAmidakuji();
+            
+            // Add pinch-zoom prevention for better experience
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches.length > 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        });
+        
+        // Add vibration feedback for mobile devices (if supported)
+        function vibrateIfPossible(duration) {
+            if (navigator.vibrate) {
+                navigator.vibrate(duration);
+            }
+        }
+        
+        // Detect orientation changes and adjust canvas accordingly
+        window.addEventListener('orientationchange', () => {
+            // Wait a moment for the orientation change to complete
+            setTimeout(adjustCanvasToContainer, 300);
+        });
+        
+        // Helper function for smooth scrolling to element
+        function smoothScrollTo(element) {
+            if (!element) return;
+            
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const elementPosition = element.getBoundingClientRect().top;
+            const offsetPosition = elementPosition - headerHeight;
+            
+            window.scrollBy({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
     </script>
 </body>
 </html>
