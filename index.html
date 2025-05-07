@@ -415,7 +415,7 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1>あみだくじ</h1>
+                <h1>まこのあみだくじ</h1>
             </div>
         </header>
 
@@ -524,12 +524,13 @@
         const drawSettings = {
             paddingX: 30,            // 左右の余白
             paddingY: 40,            // 上下の余白
+            startPaddingY: 20,       // スタート位置から最初の横線までの余白
             lineWidth: 2.5,          // 線の太さ
             verticalLineColor: 'rgba(255, 255, 255, 0.8)',   // 縦線の色
             horizontalLineColor: 'rgba(255, 255, 255, 0.7)', // 横線の色
             activeLineColor: '#5b5fc7',  // トレース線の色
             lineSpacing: 40,          // 横線の間隔
-            animationSpeed: 10,       // アニメーション速度（小さいほど速い）
+            animationSpeed: 50,       // アニメーション速度（小さいほど速い）
         };
 
         // 初期状態の表示
@@ -725,8 +726,11 @@
                 // パスポイントを作成
                 const pathPoints = [];
                 
-                // スタート位置
-                pathPoints.push({ x: currentCol, y: 0 });
+                // スタート位置（上部の縦線も含める）
+                pathPoints.push(
+                    { x: currentCol, y: -1 }, // スタートの上部（垂直線の起点）
+                    { x: currentCol, y: 0 }   // スタート位置
+                );
                 
                 for (let row = 0; row <= maxRow; row++) {
                     // 右に接続がある場合
@@ -880,7 +884,7 @@
             
             // キャンバスの幅と高さを計算
             const width = Math.max(300, columns * colWidth);
-            const height = Math.min(contentHeight, (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY * 2);
+            const height = Math.min(contentHeight, (maxRow + 2) * drawSettings.lineSpacing + drawSettings.paddingY * 2);
             
             // キャンバスのサイズを設定
             amidakujiCanvas.width = width;
@@ -908,13 +912,81 @@
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
             
-            // 縦線を描画
+            // スタート部分の上の垂直線を描画（各スタートから独立した線として）
             ctx.strokeStyle = drawSettings.verticalLineColor;
             for (let i = 0; i < columns; i++) {
                 ctx.beginPath();
                 const x = i * colWidth + colWidth / 2;
-                ctx.moveTo(x, drawSettings.paddingY);
-                ctx.lineTo(x, (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY);
+                const yStart = drawSettings.paddingY - drawSettings.startPaddingY; // スタート位置より上部
+                const yEnd = drawSettings.paddingY; // スタート位置
+                ctx.moveTo(x, yStart);
+                ctx.lineTo(x, yEnd);
+                ctx.stroke();
+            }
+            
+            // 縦線を描画（スタートからゴールまで）
+            ctx.strokeStyle = drawSettings.verticalLineColor;
+            for (let i = 0; i < columns; i++) {
+                const x = i * colWidth + colWidth / 2;
+                
+                // 各行ごとに線分を描画
+                for (let row = 0; row <= maxRow; row++) {
+                    // 横線の有無を確認
+                    const hasRightLine = amidakujiData.connections.some(
+                        conn => conn.row === row && conn.col === i
+                    );
+                    const hasLeftLine = amidakujiData.connections.some(
+                        conn => conn.row === row && conn.col === i - 1
+                    );
+                    
+                    // 現在の行に横線がなければ縦線を描画
+                    if (!hasRightLine && !hasLeftLine) {
+                        const y1 = row * drawSettings.lineSpacing + drawSettings.paddingY;
+                        const y2 = (row + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(x, y1);
+                        ctx.lineTo(x, y2);
+                        ctx.stroke();
+                    }
+                    // 横線がある場合は、その位置までの線を描画
+                    else {
+                        const y = row * drawSettings.lineSpacing + drawSettings.paddingY;
+                        
+                        if (hasRightLine) {
+                            // 右側に横線がある場合
+                            ctx.beginPath();
+                            ctx.moveTo(x, (row === 0 ? 0 : (row - 1)) * drawSettings.lineSpacing + drawSettings.paddingY);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        }
+                        
+                        if (hasLeftLine) {
+                            // 左側に横線がある場合
+                            ctx.beginPath();
+                            ctx.moveTo(x, (row === 0 ? 0 : (row - 1)) * drawSettings.lineSpacing + drawSettings.paddingY);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                        }
+                        
+                        // 横線の下から次の行までの縦線を描画
+                        const y1 = row * drawSettings.lineSpacing + drawSettings.paddingY;
+                        const y2 = (row + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
+                        
+                        ctx.beginPath();
+                        ctx.moveTo(x, y1);
+                        ctx.lineTo(x, y2);
+                        ctx.stroke();
+                    }
+                }
+                
+                // 最後の行からゴールまでの線
+                const yLastRow = maxRow * drawSettings.lineSpacing + drawSettings.paddingY;
+                const yGoal = (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
+                
+                ctx.beginPath();
+                ctx.moveTo(x, yLastRow);
+                ctx.lineTo(x, yGoal);
                 ctx.stroke();
             }
             
@@ -989,9 +1061,9 @@
                 
                 // 座標を計算
                 const x1 = current.x * colWidth + colWidth / 2;
-                const y1 = current.y * drawSettings.lineSpacing + drawSettings.paddingY;
+                const y1 = current.y < 0 ? drawSettings.paddingY - drawSettings.startPaddingY : current.y * drawSettings.lineSpacing + drawSettings.paddingY;
                 const x2 = next.x * colWidth + colWidth / 2;
-                const y2 = next.y * drawSettings.lineSpacing + drawSettings.paddingY;
+                const y2 = next.y < 0 ? drawSettings.paddingY - drawSettings.startPaddingY : next.y * drawSettings.lineSpacing + drawSettings.paddingY;
                 
                 // 線を描画
                 ctx.beginPath();
