@@ -38,25 +38,14 @@
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             min-height: 100vh;
             color: var(--text-color);
             font-size: var(--font-size);
-            overflow: hidden;
             touch-action: manipulation;
-        }
-
-        /* グラデーション背景とアニメーション */
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -2;
-            /* スクリーンショットの雰囲気に合わせた紫系グラデーション */
             background: linear-gradient(43deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 46%, var(--bg-gradient-3) 100%);
             background-size: 300% 300%;
             animation: gradient-shift var(--animation-speed) ease infinite;
@@ -66,83 +55,6 @@
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
-        }
-
-        /* 浮遊する円形エレメント */
-        .circles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .circles li {
-            position: absolute;
-            display: block;
-            list-style: none;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            animation: float var(--animation-speed) linear infinite;
-            bottom: -150px;
-            border-radius: 50%;
-        }
-
-        .circles li:nth-child(1) {
-            left: 25%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 0s;
-            animation-duration: calc(var(--animation-speed) * 1);
-        }
-
-        .circles li:nth-child(2) {
-            left: 10%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 2s;
-            animation-duration: calc(var(--animation-speed) * 0.8);
-        }
-
-        .circles li:nth-child(3) {
-            left: 70%;
-            width: 30px;
-            height: 30px;
-            animation-delay: 4s;
-            animation-duration: calc(var(--animation-speed) * 1.2);
-        }
-
-        .circles li:nth-child(4) {
-            left: 40%;
-            width: 60px;
-            height: 60px;
-            animation-delay: 0s;
-            animation-duration: calc(var(--animation-speed) * 1.33);
-        }
-
-        .circles li:nth-child(5) {
-            left: 65%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 0s;
-            animation-duration: calc(var(--animation-speed) * 1);
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 0.8;
-                border-radius: 50%;
-            }
-            100% {
-                transform: translateY(-1000px) rotate(720deg);
-                opacity: 0;
-                border-radius: 50%;
-            }
         }
 
         /* コンテナとコンテンツ */
@@ -209,10 +121,13 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 1.5rem;
+            padding: 1.2rem;
             margin-bottom: 1rem;
             transition: var(--transition);
             animation: fadeIn 0.5s ease-out;
+            height: auto;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
         }
 
         @keyframes fadeIn {
@@ -227,18 +142,18 @@
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             font-weight: 500;
         }
 
         .form-input, .form-select {
             width: 100%;
-            padding: 0.8rem 1rem;
+            padding: 0.7rem;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
@@ -252,6 +167,19 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
             border-color: rgba(99, 102, 241, 0.5);
             background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* スタート・ゴール名のグリッドレイアウト */
+        .name-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 0.5rem;
+            width: 100%;
+        }
+
+        .name-grid .form-input {
+            font-size: 0.9rem;
+            padding: 0.5rem;
         }
 
         .btn {
@@ -280,7 +208,7 @@
             border: 1px solid rgba(99, 102, 241, 0.5);
         }
 
-        .btn-primary:hover {
+        .btn-primary:hover, .btn-primary:active {
             background: rgba(99, 102, 241, 0.4);
             transform: translateY(-3px);
         }
@@ -290,7 +218,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .btn-secondary:hover {
+        .btn-secondary:hover, .btn-secondary:active {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-3px);
         }
@@ -300,7 +228,7 @@
             border: 1px solid rgba(14, 155, 117, 0.5);
         }
 
-        .btn-success:hover {
+        .btn-success:hover, .btn-success:active {
             background: rgba(14, 155, 117, 0.4);
             transform: translateY(-3px);
         }
@@ -310,18 +238,8 @@
             border: 1px solid rgba(214, 143, 11, 0.5);
         }
 
-        .btn-warning:hover {
+        .btn-warning:hover, .btn-warning:active {
             background: rgba(214, 143, 11, 0.4);
-            transform: translateY(-3px);
-        }
-
-        .btn-danger {
-            background: rgba(212, 68, 68, 0.3);
-            border: 1px solid rgba(212, 68, 68, 0.5);
-        }
-
-        .btn-danger:hover {
-            background: rgba(212, 68, 68, 0.4);
             transform: translateY(-3px);
         }
 
@@ -338,31 +256,46 @@
             padding: 1rem;
             margin-bottom: 1rem;
             position: relative;
-            min-height: 400px;
-            max-height: 70vh;
             display: flex;
             flex-direction: column;
             transition: var(--transition);
+            min-height: 500px;
+            height: calc(100vh - 100px);
         }
 
         .amidakuji-content {
             flex-grow: 1;
-            overflow-y: auto;
+            overflow: auto;
             width: 100%;
             position: relative;
+            margin: 0.5rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .amidakuji-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
         }
 
         .amidakuji-canvas {
             display: block;
-            margin: 0 auto;
             touch-action: manipulation;
+            max-width: 100%;
+            max-height: 100%;
         }
 
         .amidakuji-actions {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 1rem;
+            margin-top: 0.5rem;
             justify-content: center;
         }
 
@@ -379,24 +312,30 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.3rem;
         }
 
         .start-points, .goal-points {
             display: flex;
             justify-content: space-around;
             width: 100%;
-            padding: 0.5rem 0;
+            padding: 0.3rem 0;
         }
 
         .start-point, .goal-point {
             text-align: center;
-            padding: 0.5rem;
+            padding: 0.6rem 0.4rem;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             min-width: 2.5rem;
             transition: all 0.3s;
+            font-size: 0.9rem;
+            flex: 1;
+            margin: 0 0.15rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .start-point.active {
@@ -410,36 +349,8 @@
         }
 
         .toggle-goal-mask {
-            margin-top: 0.5rem;
+            margin-top: 0.3rem;
             align-self: center;
-        }
-
-        /* フローティングボタン */
-        .floating-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 60px;
-            height: 60px;
-            backdrop-filter: blur(var(--blur-strength));
-            -webkit-backdrop-filter: blur(var(--blur-strength));
-            background: rgba(99, 102, 241, 0.2);
-            border: 1px solid rgba(99, 102, 241, 0.3);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 100;
-            transition: var(--transition);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1) rotate(5deg);
-            background: rgba(99, 102, 241, 0.3);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
         /* トースト通知 */
@@ -477,7 +388,7 @@
             font-weight: 500;
         }
 
-        /* レスポンシブ対応 */
+        /* レスポンシブ調整 */
         @media (max-width: 768px) {
             .header-content {
                 width: 90%;
@@ -497,27 +408,10 @@
                 padding: 0.7rem 1.2rem;
                 font-size: 0.9rem;
             }
-
-            .floating-btn {
-                width: 50px;
-                height: 50px;
-                bottom: 1.5rem;
-                right: 1.5rem;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- 背景 -->
-    <div class="background"></div>
-    <ul class="circles">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-    </ul>
-
     <div class="container">
         <header>
             <div class="header-content">
@@ -535,23 +429,15 @@
 
                 <div class="form-group">
                     <label class="form-label">スタート名</label>
-                    <div id="startNames">
-                        <input type="text" class="form-input start-name" placeholder="スタート1" value="スタート1">
-                        <input type="text" class="form-input start-name" placeholder="スタート2" value="スタート2">
-                        <input type="text" class="form-input start-name" placeholder="スタート3" value="スタート3">
-                        <input type="text" class="form-input start-name" placeholder="スタート4" value="スタート4">
-                        <input type="text" class="form-input start-name" placeholder="スタート5" value="スタート5">
+                    <div id="startNames" class="name-grid">
+                        <!-- スタート名の入力フィールドはJSで動的生成 -->
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">ゴール名</label>
-                    <div id="goalNames">
-                        <input type="text" class="form-input goal-name" placeholder="ゴール1" value="ゴール1">
-                        <input type="text" class="form-input goal-name" placeholder="ゴール2" value="ゴール2">
-                        <input type="text" class="form-input goal-name" placeholder="ゴール3" value="ゴール3">
-                        <input type="text" class="form-input goal-name" placeholder="ゴール4" value="ゴール4">
-                        <input type="text" class="form-input goal-name" placeholder="ゴール5" value="ゴール5">
+                    <div id="goalNames" class="name-grid">
+                        <!-- ゴール名の入力フィールドはJSで動的生成 -->
                     </div>
                 </div>
 
@@ -567,7 +453,9 @@
                 </div>
                 
                 <div class="amidakuji-content">
-                    <canvas id="amidakujiCanvas" class="amidakuji-canvas"></canvas>
+                    <div class="amidakuji-canvas-container">
+                        <canvas id="amidakujiCanvas" class="amidakuji-canvas"></canvas>
+                    </div>
                 </div>
                 
                 <div class="endpoints-container">
@@ -581,8 +469,6 @@
                     <div class="actions-group">
                         <button id="traceButton" class="btn btn-success">トレース開始</button>
                         <button id="resetButton" class="btn btn-warning">リセット</button>
-                    </div>
-                    <div class="actions-group">
                         <button id="backToSettings" class="btn btn-secondary">設定に戻る</button>
                     </div>
                 </div>
@@ -631,22 +517,28 @@
             paths: [], // 各スタートからゴールへのパス
             goalMasked: true, // ゴールのマスキング状態
             activeStartIndex: -1, // アクティブなスタートインデックス
+            isTracing: false,    // トレース中かどうか
         };
 
         // 描画用の設定
         const drawSettings = {
-            paddingX: 20,
-            paddingY: 40,
-            lineWidth: 2,
-            verticalLineColor: 'rgba(255, 255, 255, 0.8)',
-            horizontalLineColor: 'rgba(255, 255, 255, 0.6)',
-            activeLineColor: 'rgba(99, 102, 241, 0.8)',
-            lineSpacing: 40, // 横線の間隔
-            animationSpeed: 15, // ミリ秒単位
+            paddingX: 30,            // 左右の余白
+            paddingY: 40,            // 上下の余白
+            lineWidth: 2.5,          // 線の太さ
+            verticalLineColor: 'rgba(255, 255, 255, 0.8)',   // 縦線の色
+            horizontalLineColor: 'rgba(255, 255, 255, 0.7)', // 横線の色
+            activeLineColor: '#5b5fc7',  // トレース線の色
+            lineSpacing: 40,          // 横線の間隔
+            animationSpeed: 10,       // アニメーション速度（小さいほど速い）
         };
 
         // 初期状態の表示
         function init() {
+            // デフォルト値を設定
+            amidakujiData.columns = 5;
+            amidakujiData.startNames = Array(5).fill().map((_, i) => `スタート${i + 1}`);
+            amidakujiData.goalNames = Array(5).fill().map((_, i) => `ゴール${i + 1}`);
+            
             updateInputFields();
             
             // 列数が変更されたときの処理
@@ -671,6 +563,8 @@
 
             // トレースボタンのクリックイベント
             traceButton.addEventListener('click', function() {
+                if (amidakujiData.isTracing) return; // トレース中は無視
+                
                 if (amidakujiData.activeStartIndex === -1) {
                     showToast('スタート位置を選択してください');
                 } else {
@@ -680,6 +574,8 @@
 
             // リセットボタンのクリックイベント
             resetButton.addEventListener('click', function() {
+                if (amidakujiData.isTracing) return; // トレース中は無視
+                
                 clearCanvas();
                 drawAmidakuji();
                 showToast('リセットしました');
@@ -687,6 +583,8 @@
 
             // 設定に戻るボタンのクリックイベント
             backToSettingsBtn.addEventListener('click', function() {
+                if (amidakujiData.isTracing) return; // トレース中は無視
+                
                 showSettingsPanel();
             });
         }
@@ -755,27 +653,47 @@
             amidakujiData.connections = [];
             const columns = amidakujiData.columns;
             
+            // 横線の行数を決定（列数に比例するよう調整）
+            const rows = Math.min(12, Math.max(5, columns * 2));
+            
             // 横線の数を決定（複雑さを調整）
-            const minConnections = columns * 2;
-            const maxConnections = columns * 4;
-            const numConnections = Math.floor(Math.random() * (maxConnections - minConnections + 1)) + minConnections;
+            const maxConnections = (columns - 1) * rows / 2; // 最大で全ての可能な場所の半分に線を配置
+            const numConnections = Math.floor(maxConnections * 0.7); // 70%の密度
             
-            // 横線の位置をランダムに生成
-            const maxRows = 10; // 縦線の間の最大行数
+            // 横線を配置できる全ての位置を生成
+            const allPositions = [];
+            for (let row = 0; row < rows; row++) {
+                for (let col = 0; col < columns - 1; col++) {
+                    allPositions.push({ row, col });
+                }
+            }
             
+            // 位置をシャッフル
+            shuffleArray(allPositions);
+            
+            // 必要な数の横線を選択
             for (let i = 0; i < numConnections; i++) {
-                // ランダムな行と列を選択
-                const row = Math.floor(Math.random() * maxRows);
-                const col = Math.floor(Math.random() * (columns - 1)); // 列は (columns-1) まで
-                
-                // 既存の接続と衝突しないようにする
-                if (!hasConflict(row, col)) {
-                    amidakujiData.connections.push({ row, col });
+                if (i < allPositions.length) {
+                    const position = allPositions[i];
+                    
+                    // 既存の接続と衝突しないようにする
+                    if (!hasConflict(position.row, position.col)) {
+                        amidakujiData.connections.push({ row: position.row, col: position.col });
+                    }
                 }
             }
             
             // 行番号でソート
             amidakujiData.connections.sort((a, b) => a.row - b.row || a.col - b.col);
+        }
+        
+        // 配列をシャッフルするユーティリティ関数
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
         }
         
         // 横線の衝突をチェック
@@ -785,7 +703,7 @@
                 conn.row === row && conn.col === col
             );
             
-            // 隣接する列にも横線がある場合（デッドロック防止）
+            // 隣接する列に同じ行で横線がある場合（デッドロック防止）
             const adjacentPosition = amidakujiData.connections.some(conn => 
                 conn.row === row && (conn.col === col - 1 || conn.col === col + 1)
             );
@@ -799,14 +717,18 @@
             amidakujiData.paths = [];
             
             for (let start = 0; start < columns; start++) {
-                const path = [];
                 let currentCol = start;
                 
                 // 各行で接続を確認
-                for (let row = 0; row < Math.max(...amidakujiData.connections.map(c => c.row)) + 1; row++) {
-                    // 現在の位置
-                    path.push({ x: currentCol, y: row, type: 'vertical' });
-                    
+                const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0);
+                
+                // パスポイントを作成
+                const pathPoints = [];
+                
+                // スタート位置
+                pathPoints.push({ x: currentCol, y: 0 });
+                
+                for (let row = 0; row <= maxRow; row++) {
                     // 右に接続がある場合
                     const rightConnection = amidakujiData.connections.find(
                         conn => conn.row === row && conn.col === currentCol
@@ -819,21 +741,32 @@
                     
                     if (rightConnection) {
                         // 右に移動
-                        path.push({ x: currentCol, y: row, direction: 'right', type: 'horizontal' });
+                        pathPoints.push(
+                            { x: currentCol, y: row },
+                            { x: currentCol + 1, y: row }
+                        );
                         currentCol++;
                     } else if (leftConnection) {
                         // 左に移動
-                        path.push({ x: currentCol, y: row, direction: 'left', type: 'horizontal' });
+                        pathPoints.push(
+                            { x: currentCol, y: row },
+                            { x: currentCol - 1, y: row }
+                        );
                         currentCol--;
+                    }
+                    
+                    // 次の行に移動
+                    if (row < maxRow) {
+                        pathPoints.push({ x: currentCol, y: row + 1 });
                     }
                 }
                 
-                // 最終位置（ゴール）
-                path.push({ x: currentCol, y: Math.max(...amidakujiData.connections.map(c => c.row)) + 1, type: 'vertical' });
+                // ゴール位置
+                pathPoints.push({ x: currentCol, y: maxRow + 1 });
                 
                 // パスとゴール位置を保存
                 amidakujiData.paths.push({
-                    path: path,
+                    path: pathPoints,
                     goal: currentCol
                 });
             }
@@ -869,6 +802,8 @@
                 
                 // スタートポイントのクリックイベント
                 startPoint.addEventListener('click', function() {
+                    if (amidakujiData.isTracing) return; // トレース中は選択不可
+                    
                     const index = parseInt(this.dataset.index);
                     selectStartPoint(index);
                 });
@@ -933,16 +868,26 @@
             const columns = amidakujiData.columns;
             const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
             
+            // コンテナのサイズを取得
+            const contentWidth = amidakujiContainer.clientWidth - 40; // パディングを考慮
+            const contentHeight = amidakujiContainer.clientHeight - 200; // 他の要素のスペースを考慮
+            
+            // 列間の最小距離を確保（小さくしすぎないようにする）
+            const minColWidth = 60;
+            
+            // 適切な列幅を計算
+            const colWidth = Math.max(minColWidth, Math.min(100, Math.floor(contentWidth / columns)));
+            
             // キャンバスの幅と高さを計算
-            const width = Math.max(300, columns * 60 + drawSettings.paddingX * 2);
-            const height = maxRow * drawSettings.lineSpacing + drawSettings.paddingY * 2;
+            const width = Math.max(300, columns * colWidth);
+            const height = Math.min(contentHeight, (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY * 2);
             
             // キャンバスのサイズを設定
             amidakujiCanvas.width = width;
             amidakujiCanvas.height = height;
             
-            // コンテナのサイズも調整
-            amidakujiContainer.style.width = `${width + 40}px`;
+            // 描画設定を更新
+            drawSettings.colWidth = colWidth;
         }
 
         // キャンバスをクリア
@@ -955,29 +900,30 @@
             clearCanvas();
             
             const columns = amidakujiData.columns;
-            const canvasWidth = amidakujiCanvas.width;
-            const canvasHeight = amidakujiCanvas.height;
-            const colWidth = (canvasWidth - drawSettings.paddingX * 2) / (columns - 1);
+            const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
+            const colWidth = drawSettings.colWidth;
             
+            // 設定
             ctx.lineWidth = drawSettings.lineWidth;
-            ctx.strokeStyle = drawSettings.verticalLineColor;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             
             // 縦線を描画
+            ctx.strokeStyle = drawSettings.verticalLineColor;
             for (let i = 0; i < columns; i++) {
-                const x = drawSettings.paddingX + i * colWidth;
-                
                 ctx.beginPath();
+                const x = i * colWidth + colWidth / 2;
                 ctx.moveTo(x, drawSettings.paddingY);
-                ctx.lineTo(x, canvasHeight - drawSettings.paddingY);
+                ctx.lineTo(x, (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY);
                 ctx.stroke();
             }
             
             // 横線を描画
             ctx.strokeStyle = drawSettings.horizontalLineColor;
             amidakujiData.connections.forEach(conn => {
-                const x1 = drawSettings.paddingX + conn.col * colWidth;
-                const x2 = drawSettings.paddingX + (conn.col + 1) * colWidth;
-                const y = drawSettings.paddingY + conn.row * drawSettings.lineSpacing;
+                const x1 = conn.col * colWidth + colWidth / 2;
+                const x2 = (conn.col + 1) * colWidth + colWidth / 2;
+                const y = conn.row * drawSettings.lineSpacing + drawSettings.paddingY;
                 
                 ctx.beginPath();
                 ctx.moveTo(x1, y);
@@ -989,22 +935,33 @@
         // パスのトレース
         function tracePath(startIndex) {
             if (startIndex < 0 || startIndex >= amidakujiData.columns) return;
+            if (amidakujiData.isTracing) return; // 既にトレース中なら何もしない
+            
+            amidakujiData.isTracing = true; // トレース開始
             
             const path = amidakujiData.paths[startIndex].path;
-            const columns = amidakujiData.columns;
-            const canvasWidth = amidakujiCanvas.width;
-            const colWidth = (canvasWidth - drawSettings.paddingX * 2) / (columns - 1);
+            if (!path || path.length === 0) {
+                amidakujiData.isTracing = false;
+                return;
+            }
+            
+            const colWidth = drawSettings.colWidth;
             
             // トレース前に再描画
             clearCanvas();
             drawAmidakuji();
             
-            // トレースのアニメーション
+            // アニメーションの設定
             let currentStep = 0;
+            const pathLength = path.length - 1;
             
-            function animateTrace() {
-                if (currentStep >= path.length) {
-                    // アニメーション終了後、ゴールポイントを表示
+            // アニメーション関数
+            function animate() {
+                if (currentStep >= pathLength) {
+                    // アニメーション終了
+                    amidakujiData.isTracing = false;
+                    
+                    // ゴールポイントを表示
                     const goalIndex = amidakujiData.paths[startIndex].goal;
                     const goalPoints = document.querySelectorAll('.goal-point');
                     
@@ -1026,41 +983,33 @@
                     return;
                 }
                 
-                const segment = path[currentStep];
-                const x = drawSettings.paddingX + segment.x * colWidth;
-                const y = drawSettings.paddingY + segment.y * drawSettings.lineSpacing;
+                // 現在のステップと次のステップのポイントを取得
+                const current = path[currentStep];
+                const next = path[currentStep + 1];
                 
-                ctx.lineWidth = drawSettings.lineWidth + 1;
+                // 座標を計算
+                const x1 = current.x * colWidth + colWidth / 2;
+                const y1 = current.y * drawSettings.lineSpacing + drawSettings.paddingY;
+                const x2 = next.x * colWidth + colWidth / 2;
+                const y2 = next.y * drawSettings.lineSpacing + drawSettings.paddingY;
+                
+                // 線を描画
+                ctx.beginPath();
                 ctx.strokeStyle = drawSettings.activeLineColor;
+                ctx.lineWidth = drawSettings.lineWidth + 1;
+                ctx.moveTo(x1, y1);
+                ctx.lineTo(x2, y2);
+                ctx.stroke();
                 
-                if (segment.type === 'vertical') {
-                    // 縦線セグメント
-                    if (currentStep < path.length - 1 && path[currentStep + 1].type === 'vertical') {
-                        const nextY = drawSettings.paddingY + path[currentStep + 1].y * drawSettings.lineSpacing;
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(x, nextY);
-                        ctx.stroke();
-                    }
-                } else if (segment.type === 'horizontal') {
-                    // 横線セグメント
-                    const nextX = segment.direction === 'right' 
-                        ? drawSettings.paddingX + (segment.x + 1) * colWidth
-                        : drawSettings.paddingX + (segment.x - 1) * colWidth;
-                    
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(nextX, y);
-                    ctx.stroke();
-                }
-                
+                // 次のステップへ
                 currentStep++;
-                setTimeout(animateTrace, drawSettings.animationSpeed);
+                
+                // 次のフレームをリクエスト
+                setTimeout(animate, drawSettings.animationSpeed);
             }
             
             // アニメーション開始
-            animateTrace();
+            animate();
         }
 
         // トースト通知を表示
@@ -1079,8 +1028,11 @@
         // ウィンドウリサイズ時のキャンバス調整
         window.addEventListener('resize', function() {
             if (amidakujiContainer.style.display !== 'none') {
-                resizeCanvas();
-                drawAmidakuji();
+                // トレース中は再描画しない
+                if (!amidakujiData.isTracing) {
+                    resizeCanvas();
+                    drawAmidakuji();
+                }
             }
         });
 
