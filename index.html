@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>あみだくじ</title>
     <style>
         /* システムフォントスタックを使用 */
@@ -24,6 +24,7 @@
             --card-opacity: 0.15;
             --animation-speed: 15s;
             --font-size: medium;
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         [data-theme="dark"] {
@@ -41,14 +42,29 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html, body {
+            height: 100%;
+            width: 100%;
+            overscroll-behavior: none;
+        }
+
         body {
             min-height: 100vh;
+            min-height: -webkit-fill-available; /* iOS用の高さ修正 */
             color: var(--text-color);
             font-size: var(--font-size);
             touch-action: manipulation;
             background: linear-gradient(43deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 46%, var(--bg-gradient-3) 100%);
             background-size: 300% 300%;
             animation: gradient-shift var(--animation-speed) ease infinite;
+            position: relative;
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            body {
+                /* iOSのアドレスバーを考慮した高さ */
+                height: -webkit-fill-available;
+            }
         }
 
         @keyframes gradient-shift {
@@ -61,14 +77,16 @@
         .container {
             width: 100%;
             height: 100vh;
+            height: calc(100vh - var(--safe-area-inset-bottom));
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
+            padding-bottom: env(safe-area-inset-bottom);
         }
 
         header {
-            height: 60px;
+            height: 50px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -84,7 +102,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 0.8rem 2rem;
+            padding: 0.6rem 1.5rem;
             text-align: center;
             transition: var(--transition);
             transform-style: preserve-3d;
@@ -93,7 +111,7 @@
         }
 
         h1 {
-            font-size: 1.7rem;
+            font-size: 1.5rem;
             font-weight: 700;
             background: linear-gradient(to right, #ffffff, #c9c9c9);
             -webkit-background-clip: text;
@@ -106,9 +124,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 1rem;
-            overflow-y: auto;
-            max-height: calc(100vh - 60px);
+            padding: 0.5rem;
+            overflow: hidden;
+            max-height: calc(100vh - 50px - var(--safe-area-inset-bottom));
         }
 
         /* 設定画面 */
@@ -121,12 +139,12 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 1.2rem;
+            padding: 1rem;
             margin-bottom: 1rem;
             transition: var(--transition);
             animation: fadeIn 0.5s ease-out;
             height: auto;
-            max-height: calc(100vh - 100px);
+            max-height: calc(100vh - 80px - var(--safe-area-inset-bottom));
             overflow-y: auto;
         }
 
@@ -142,18 +160,18 @@
         }
 
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.4rem;
+            margin-bottom: 0.3rem;
             font-weight: 500;
         }
 
         .form-input, .form-select {
             width: 100%;
-            padding: 0.7rem;
+            padding: 0.6rem;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
@@ -183,7 +201,7 @@
         }
 
         .btn {
-            padding: 0.8rem 1.5rem;
+            padding: 0.7rem 1.3rem;
             background: rgba(99, 102, 241, 0.3);
             border: 1px solid rgba(99, 102, 241, 0.5);
             border-radius: 50px;
@@ -253,22 +271,22 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 1rem;
-            margin-bottom: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 0.5rem;
             position: relative;
             display: flex;
             flex-direction: column;
             transition: var(--transition);
-            min-height: 500px;
-            height: calc(100vh - 100px);
+            min-height: 450px;
+            height: calc(100vh - 70px - var(--safe-area-inset-bottom));
         }
 
         .amidakuji-content {
             flex-grow: 1;
-            overflow: auto;
+            overflow: hidden;
             width: 100%;
             position: relative;
-            margin: 0.5rem 0;
+            margin: 0.3rem 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -295,8 +313,9 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 0.5rem;
+            margin-top: 0.3rem;
             justify-content: center;
+            padding-bottom: 0.5rem;
         }
 
         .actions-group {
@@ -312,27 +331,27 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 0.3rem;
+            gap: 0.2rem;
         }
 
         .start-points, .goal-points {
             display: flex;
             justify-content: space-around;
             width: 100%;
-            padding: 0.3rem 0;
+            padding: 0.2rem 0;
         }
 
         .start-point, .goal-point {
             text-align: center;
-            padding: 0.6rem 0.4rem;
+            padding: 0.5rem 0.3rem;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             min-width: 2.5rem;
             transition: all 0.3s;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             flex: 1;
-            margin: 0 0.15rem;
+            margin: 0 0.1rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -349,14 +368,16 @@
         }
 
         .toggle-goal-mask {
-            margin-top: 0.3rem;
+            margin-top: 0.2rem;
             align-self: center;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
         }
 
         /* トースト通知 */
         .toast {
             position: fixed;
-            bottom: 2rem;
+            bottom: calc(1.5rem + var(--safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             backdrop-filter: blur(var(--blur-strength));
@@ -388,25 +409,53 @@
             font-weight: 500;
         }
 
-        /* レスポンシブ調整 */
-        @media (max-width: 768px) {
+        /* iPhoneのノッチ対応 */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(0.5rem, env(safe-area-inset-left));
+                padding-right: max(0.5rem, env(safe-area-inset-right));
+                padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+            }
+            
+            .toast {
+                bottom: max(1.5rem, env(safe-area-inset-bottom) + 1rem);
+            }
+        }
+
+        /* モバイル特有の調整 */
+        @media (max-width: 767px) {
+            header {
+                height: 40px;
+            }
+            
             .header-content {
                 width: 90%;
-                padding: 0.6rem 1rem;
+                padding: 0.4rem 1rem;
             }
 
             h1 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
 
-            .settings-panel, .amidakuji-container {
-                width: 95%;
-                padding: 1rem;
+            .content {
+                max-height: calc(100vh - 40px - var(--safe-area-inset-bottom));
+                padding: 0.3rem;
+            }
+
+            .amidakuji-container {
+                min-height: 400px;
+                height: calc(100vh - 60px - var(--safe-area-inset-bottom));
+                padding: 0.5rem;
             }
 
             .btn {
-                padding: 0.7rem 1.2rem;
+                padding: 0.6rem 1rem;
                 font-size: 0.9rem;
+            }
+
+            .start-point, .goal-point {
+                padding: 0.4rem 0.2rem;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -415,7 +464,7 @@
     <div class="container">
         <header>
             <div class="header-content">
-                <h1>まこのあみだくじ</h1>
+                <h1>あみだくじ</h1>
             </div>
         </header>
 
@@ -505,6 +554,16 @@
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toastMessage');
 
+        // モバイルブラウザに対応するため、CSS変数を設定
+        function setViewportHeight() {
+            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+            document.documentElement.style.setProperty('--safe-area-inset-bottom', `${window.innerHeight > window.outerHeight ? 20 : 0}px`);
+        }
+        
+        // 初回と画面サイズ変更時にviewport heightを設定
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+
         // Canvas コンテキスト
         const ctx = amidakujiCanvas.getContext('2d');
 
@@ -530,7 +589,7 @@
             horizontalLineColor: 'rgba(255, 255, 255, 0.7)', // 横線の色
             activeLineColor: '#5b5fc7',  // トレース線の色
             lineSpacing: 40,          // 横線の間隔
-            animationSpeed: 50,       // アニメーション速度（小さいほど速い）
+            animationSpeed: 10,       // アニメーション速度（小さいほど速い）
         };
 
         // 初期状態の表示
@@ -655,7 +714,7 @@
             const columns = amidakujiData.columns;
             
             // 横線の行数を決定（列数に比例するよう調整）
-            const rows = Math.min(12, Math.max(5, columns * 2));
+            const rows = Math.min(10, Math.max(5, columns * 1.5));
             
             // 横線の数を決定（複雑さを調整）
             const maxConnections = (columns - 1) * rows / 2; // 最大で全ての可能な場所の半分に線を配置
@@ -873,18 +932,19 @@
             const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
             
             // コンテナのサイズを取得
-            const contentWidth = amidakujiContainer.clientWidth - 40; // パディングを考慮
-            const contentHeight = amidakujiContainer.clientHeight - 200; // 他の要素のスペースを考慮
+            const contentWidth = amidakujiContainer.clientWidth - 20; // パディングを考慮
+            const contentHeight = amidakujiContainer.clientHeight - 150; // 他の要素のスペースを考慮
             
-            // 列間の最小距離を確保（小さくしすぎないようにする）
-            const minColWidth = 60;
+            // モバイル向けに調整: 列幅を自動調整
+            const colWidth = Math.max(40, Math.min(80, Math.floor(contentWidth / columns)));
             
-            // 適切な列幅を計算
-            const colWidth = Math.max(minColWidth, Math.min(100, Math.floor(contentWidth / columns)));
+            // モバイル向けに高さを調整: 線間隔を調整
+            const lineSpacing = Math.max(30, Math.min(40, Math.floor(contentHeight / (maxRow + 2))));
+            drawSettings.lineSpacing = lineSpacing;
             
             // キャンバスの幅と高さを計算
             const width = Math.max(300, columns * colWidth);
-            const height = Math.min(contentHeight, (maxRow + 2) * drawSettings.lineSpacing + drawSettings.paddingY * 2);
+            const height = Math.min(contentHeight, (maxRow + 2) * lineSpacing + drawSettings.paddingY);
             
             // キャンバスのサイズを設定
             amidakujiCanvas.width = width;
@@ -1040,6 +1100,10 @@
                     // 一時的にマスクを解除してゴールを表示
                     goalPoints[goalIndex].classList.remove('masked');
                     
+                    // ゴールポイントをハイライト
+                    goalPoints[goalIndex].style.background = 'rgba(99, 102, 241, 0.3)';
+                    goalPoints[goalIndex].style.borderColor = 'rgba(99, 102, 241, 0.5)';
+                    
                     // トーストでゴール通知
                     showToast(`${amidakujiData.startNames[startIndex]}は${goalPoints[goalIndex].textContent}に到達しました！`);
                     
@@ -1049,6 +1113,18 @@
                             if (amidakujiData.goalMasked) {
                                 goalPoints[goalIndex].classList.add('masked');
                             }
+                            
+                            // ハイライトを元に戻す
+                            setTimeout(() => {
+                                goalPoints[goalIndex].style.background = '';
+                                goalPoints[goalIndex].style.borderColor = '';
+                            }, 1000);
+                        }, 3000);
+                    } else {
+                        // マスクしない場合は、ハイライトだけ元に戻す
+                        setTimeout(() => {
+                            goalPoints[goalIndex].style.background = '';
+                            goalPoints[goalIndex].style.borderColor = '';
                         }, 3000);
                     }
                     
@@ -1094,11 +1170,17 @@
             }, 3000);
         }
 
-        // ページ読み込み時の初期化
-        window.addEventListener('load', init);
-
-        // ウィンドウリサイズ時のキャンバス調整
-        window.addEventListener('resize', function() {
+        // iOSのスクロール制御（バウンス効果を防ぐ）
+        document.addEventListener('touchmove', function(e) {
+            if (e.target.closest('.amidakuji-canvas') || e.target.closest('.amidakuji-content')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // アドレスバーのリサイズ対応
+        function handleResize() {
+            setViewportHeight();
+            
             if (amidakujiContainer.style.display !== 'none') {
                 // トレース中は再描画しない
                 if (!amidakujiData.isTracing) {
@@ -1106,29 +1188,45 @@
                     drawAmidakuji();
                 }
             }
+        }
+
+        // ページ読み込み時の初期化
+        window.addEventListener('load', init);
+        
+        // ウィンドウリサイズとスクロール時のイベント
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
+        window.addEventListener('scroll', function() {
+            // スクロール中もビューポート高さを更新
+            setViewportHeight();
+        });
+        
+        // iOSのソフトキーボード表示/非表示時の高さ調整
+        const inputs = document.querySelectorAll('input, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                setTimeout(setViewportHeight, 300);
+            });
+            input.addEventListener('blur', () => {
+                setTimeout(setViewportHeight, 300);
+            });
         });
 
-        // タッチデバイス最適化
-        let touchStartY = 0;
-        document.addEventListener('touchstart', function(e) {
-            touchStartY = e.touches[0].clientY;
-        });
-
-        document.addEventListener('touchmove', function(e) {
-            const touchY = e.touches[0].clientY;
-            const scrollingDown = touchY < touchStartY;
-            const scrollingUp = touchY > touchStartY;
+        // モバイルデバイスの検出とタッチ最適化
+        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+            document.body.classList.add('mobile');
             
-            // 上部での下スクロールを防止
-            if (scrollingDown && window.scrollY <= 0) {
-                e.preventDefault();
-            }
-            
-            // 下部での上スクロールを防止
-            if (scrollingUp && window.scrollY + window.innerHeight >= document.body.scrollHeight) {
-                e.preventDefault();
-            }
-        }, { passive: false });
+            // タッチデバイスでのダブルタップによるズームを防止
+            let lastTap = 0;
+            document.addEventListener('touchend', function(e) {
+                const currentTime = new Date().getTime();
+                const tapLength = currentTime - lastTap;
+                if (tapLength < 300 && tapLength > 0) {
+                    e.preventDefault();
+                }
+                lastTap = currentTime;
+            });
+        }
     </script>
 </body>
 </html>
