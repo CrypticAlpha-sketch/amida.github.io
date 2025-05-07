@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>あみだくじ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>まこのあみだくじ</title>
     <style>
         /* システムフォントスタックを使用 */
         :root {
@@ -24,7 +24,6 @@
             --card-opacity: 0.15;
             --animation-speed: 15s;
             --font-size: medium;
-            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         [data-theme="dark"] {
@@ -42,29 +41,15 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            height: 100%;
-            width: 100%;
-            overscroll-behavior: none;
-        }
-
         body {
             min-height: 100vh;
-            min-height: -webkit-fill-available; /* iOS用の高さ修正 */
             color: var(--text-color);
             font-size: var(--font-size);
             touch-action: manipulation;
             background: linear-gradient(43deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 46%, var(--bg-gradient-3) 100%);
             background-size: 300% 300%;
             animation: gradient-shift var(--animation-speed) ease infinite;
-            position: relative;
-        }
-
-        @supports (-webkit-touch-callout: none) {
-            body {
-                /* iOSのアドレスバーを考慮した高さ */
-                height: -webkit-fill-available;
-            }
+            overflow: hidden;
         }
 
         @keyframes gradient-shift {
@@ -77,16 +62,14 @@
         .container {
             width: 100%;
             height: 100vh;
-            height: calc(100vh - var(--safe-area-inset-bottom));
             display: flex;
             flex-direction: column;
             position: relative;
             overflow: hidden;
-            padding-bottom: env(safe-area-inset-bottom);
         }
 
         header {
-            height: 50px;
+            height: 60px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -102,7 +85,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 0.6rem 1.5rem;
+            padding: 0.8rem 2rem;
             text-align: center;
             transition: var(--transition);
             transform-style: preserve-3d;
@@ -111,7 +94,7 @@
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.7rem;
             font-weight: 700;
             background: linear-gradient(to right, #ffffff, #c9c9c9);
             -webkit-background-clip: text;
@@ -124,9 +107,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0.5rem;
-            overflow: hidden;
-            max-height: calc(100vh - 50px - var(--safe-area-inset-bottom));
+            padding: 1rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 60px);
         }
 
         /* 設定画面 */
@@ -139,12 +122,12 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 1rem;
+            padding: 1.2rem;
             margin-bottom: 1rem;
             transition: var(--transition);
             animation: fadeIn 0.5s ease-out;
             height: auto;
-            max-height: calc(100vh - 80px - var(--safe-area-inset-bottom));
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
         }
 
@@ -160,18 +143,18 @@
         }
 
         .form-group {
-            margin-bottom: 0.8rem;
+            margin-bottom: 1rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.4rem;
             font-weight: 500;
         }
 
         .form-input, .form-select {
             width: 100%;
-            padding: 0.6rem;
+            padding: 0.7rem;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 8px;
@@ -201,7 +184,7 @@
         }
 
         .btn {
-            padding: 0.7rem 1.3rem;
+            padding: 0.8rem 1.5rem;
             background: rgba(99, 102, 241, 0.3);
             border: 1px solid rgba(99, 102, 241, 0.5);
             border-radius: 50px;
@@ -271,22 +254,22 @@
             border: 1px solid var(--glass-border);
             border-radius: 16px;
             box-shadow: var(--glass-shadow);
-            padding: 0.8rem;
-            margin-bottom: 0.5rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
             position: relative;
             display: flex;
             flex-direction: column;
             transition: var(--transition);
-            min-height: 450px;
-            height: calc(100vh - 70px - var(--safe-area-inset-bottom));
+            min-height: 500px;
+            height: calc(100vh - 100px);
         }
 
         .amidakuji-content {
             flex-grow: 1;
-            overflow: hidden;
+            overflow: auto;
             width: 100%;
             position: relative;
-            margin: 0.3rem 0;
+            margin: 0.5rem 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -313,9 +296,8 @@
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
-            margin-top: 0.3rem;
+            margin-top: 0.5rem;
             justify-content: center;
-            padding-bottom: 0.5rem;
         }
 
         .actions-group {
@@ -331,27 +313,27 @@
             width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.3rem;
         }
 
         .start-points, .goal-points {
             display: flex;
             justify-content: space-around;
             width: 100%;
-            padding: 0.2rem 0;
+            padding: 0.3rem 0;
         }
 
         .start-point, .goal-point {
             text-align: center;
-            padding: 0.5rem 0.3rem;
+            padding: 0.6rem 0.4rem;
             border-radius: 8px;
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.2);
             min-width: 2.5rem;
             transition: all 0.3s;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             flex: 1;
-            margin: 0 0.1rem;
+            margin: 0 0.15rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -360,6 +342,8 @@
         .start-point.active {
             background: rgba(99, 102, 241, 0.3);
             border-color: rgba(99, 102, 241, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.5);
         }
 
         .goal-point.masked {
@@ -368,16 +352,14 @@
         }
 
         .toggle-goal-mask {
-            margin-top: 0.2rem;
+            margin-top: 0.3rem;
             align-self: center;
-            font-size: 0.9rem;
-            padding: 0.5rem 1rem;
         }
 
         /* トースト通知 */
         .toast {
             position: fixed;
-            bottom: calc(1.5rem + var(--safe-area-inset-bottom));
+            bottom: 2rem;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             backdrop-filter: blur(var(--blur-strength));
@@ -409,54 +391,192 @@
             font-weight: 500;
         }
 
-        /* iPhoneのノッチ対応 */
-        @supports (padding: max(0px)) {
-            .container {
-                padding-left: max(0.5rem, env(safe-area-inset-left));
-                padding-right: max(0.5rem, env(safe-area-inset-right));
-                padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-            }
-            
-            .toast {
-                bottom: max(1.5rem, env(safe-area-inset-bottom) + 1rem);
-            }
+        /* 新しい演出用スタイル */
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
         }
 
-        /* モバイル特有の調整 */
-        @media (max-width: 767px) {
-            header {
-                height: 40px;
-            }
-            
+        @keyframes confetti-fall {
+            0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .celebration-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+
+        .celebration-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .celebration-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            max-width: 90%;
+            transform: scale(0.8);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: pulse 2s infinite;
+        }
+
+        .celebration-overlay.active .celebration-content {
+            transform: scale(1);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+
+        .celebration-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .celebration-result {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .celebration-close {
+            padding: 0.8rem 2rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .celebration-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* カウントダウンタイマー */
+        .countdown-timer {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            z-index: 9000;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .countdown-timer.active {
+            opacity: 1;
+        }
+
+        @keyframes countdown-pulse {
+            0% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* 演出オプション */
+        .effects-options {
+            margin-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 1rem;
+        }
+
+        .effects-title {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .effects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+        }
+
+        .effect-option {
+            display: flex;
+            align-items: center;
+        }
+
+        .effect-option label {
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+
+        /* レスポンシブ調整 */
+        @media (max-width: 768px) {
             .header-content {
                 width: 90%;
-                padding: 0.4rem 1rem;
+                padding: 0.6rem 1rem;
             }
 
             h1 {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
             }
 
-            .content {
-                max-height: calc(100vh - 40px - var(--safe-area-inset-bottom));
-                padding: 0.3rem;
-            }
-
-            .amidakuji-container {
-                min-height: 400px;
-                height: calc(100vh - 60px - var(--safe-area-inset-bottom));
-                padding: 0.5rem;
+            .settings-panel, .amidakuji-container {
+                width: 95%;
+                padding: 1rem;
             }
 
             .btn {
-                padding: 0.6rem 1rem;
+                padding: 0.7rem 1.2rem;
                 font-size: 0.9rem;
             }
 
-            .start-point, .goal-point {
-                padding: 0.4rem 0.2rem;
-                font-size: 0.8rem;
+            .celebration-title {
+                font-size: 1.5rem;
             }
+
+            .celebration-result {
+                font-size: 1.2rem;
+            }
+
+            .countdown-timer {
+                font-size: 6rem;
+            }
+        }
+
+        /* レインボーテキスト */
+        .rainbow-text {
+            background: linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow-shift 5s linear infinite;
+            background-size: 200% auto;
+        }
+
+        @keyframes rainbow-shift {
+            0% { background-position: 0 0; }
+            100% { background-position: 200% 0; }
         }
     </style>
 </head>
@@ -487,6 +607,29 @@
                     <label class="form-label">ゴール名</label>
                     <div id="goalNames" class="name-grid">
                         <!-- ゴール名の入力フィールドはJSで動的生成 -->
+                    </div>
+                </div>
+
+                <!-- 演出オプション -->
+                <div class="effects-options">
+                    <div class="effects-title">演出オプション</div>
+                    <div class="effects-grid">
+                        <div class="effect-option">
+                            <input type="checkbox" id="effectSound" checked>
+                            <label for="effectSound">効果音</label>
+                        </div>
+                        <div class="effect-option">
+                            <input type="checkbox" id="effectVibration" checked>
+                            <label for="effectVibration">振動</label>
+                        </div>
+                        <div class="effect-option">
+                            <input type="checkbox" id="effectConfetti" checked>
+                            <label for="effectConfetti">紙吹雪</label>
+                        </div>
+                        <div class="effect-option">
+                            <input type="checkbox" id="effectCountdown" checked>
+                            <label for="effectCountdown">カウントダウン</label>
+                        </div>
                     </div>
                 </div>
 
@@ -536,697 +679,542 @@
         <span id="toastMessage" class="toast-message">操作が完了しました</span>
     </div>
 
+    <!-- 結果発表オーバーレイ -->
+    <div id="celebrationOverlay" class="celebration-overlay">
+        <div class="celebration-content">
+            <h2 class="celebration-title rainbow-text">おめでとうございます！</h2>
+            <p id="celebrationResult" class="celebration-result">結果がここに表示されます</p>
+            <button id="celebrationClose" class="celebration-close">閉じる</button>
+        </div>
+    </div>
+
+    <!-- カウントダウンタイマー -->
+    <div id="countdownTimer" class="countdown-timer">3</div>
+
     <script>
-        // 各要素への参照
-        const settingsPanel = document.getElementById('settingsPanel');
-        const amidakujiContainer = document.getElementById('amidakujiContainer');
-        const columnsInput = document.getElementById('columns');
-        const startNamesContainer = document.getElementById('startNames');
-        const goalNamesContainer = document.getElementById('goalNames');
-        const createAmidakujiBtn = document.getElementById('createAmidakuji');
-        const startPointsContainer = document.getElementById('startPoints');
-        const goalPointsContainer = document.getElementById('goalPoints');
-        const toggleGoalMaskBtn = document.getElementById('toggleGoalMask');
-        const traceButton = document.getElementById('traceButton');
-        const resetButton = document.getElementById('resetButton');
-        const backToSettingsBtn = document.getElementById('backToSettings');
-        const amidakujiCanvas = document.getElementById('amidakujiCanvas');
-        const toast = document.getElementById('toast');
-        const toastMessage = document.getElementById('toastMessage');
+// --- 変数・要素参照 ---
+const settingsPanel = document.getElementById('settingsPanel');
+const amidakujiContainer = document.getElementById('amidakujiContainer');
+const columnsInput = document.getElementById('columns');
+const startNamesContainer = document.getElementById('startNames');
+const goalNamesContainer = document.getElementById('goalNames');
+const createAmidakujiBtn = document.getElementById('createAmidakuji');
+const startPointsContainer = document.getElementById('startPoints');
+const goalPointsContainer = document.getElementById('goalPoints');
+const toggleGoalMaskBtn = document.getElementById('toggleGoalMask');
+const traceButton = document.getElementById('traceButton');
+const resetButton = document.getElementById('resetButton');
+const backToSettingsBtn = document.getElementById('backToSettings');
+const amidakujiCanvas = document.getElementById('amidakujiCanvas');
+const toast = document.getElementById('toast');
+const toastMessage = document.getElementById('toastMessage');
+const celebrationOverlay = document.getElementById('celebrationOverlay');
+const celebrationResult = document.getElementById('celebrationResult');
+const celebrationClose = document.getElementById('celebrationClose');
+const countdownTimer = document.getElementById('countdownTimer');
+const effectSound = document.getElementById('effectSound');
+const effectVibration = document.getElementById('effectVibration');
+const effectConfetti = document.getElementById('effectConfetti');
+const effectCountdown = document.getElementById('effectCountdown');
 
-        // モバイルブラウザに対応するため、CSS変数を設定
-        function setViewportHeight() {
-            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-            document.documentElement.style.setProperty('--safe-area-inset-bottom', `${window.innerHeight > window.outerHeight ? 20 : 0}px`);
-        }
-        
-        // 初回と画面サイズ変更時にviewport heightを設定
-        setViewportHeight();
-        window.addEventListener('resize', setViewportHeight);
+// 効果音
+const sounds = {
+    click: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAeMwAUFBQUFCgUFBQUFBcXFxcXFxcqKioqKioqPz8/Pz8/P1JSUlJSUlJmZmZmZmZmdnZ2dnZ2doKCgoKCgoKPj4+Pj4+PnZ2dnZ2dnZ2qqqqqqqqqs7Ozs7Ozs7y8vLy8vLzKysrKysrKysrV1dXV1dXV3d3d3d3d3d6urq6urq6v39/f39/f0AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAHjMxqwWF'),
+    select: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAASAAAeMwAUFBQUFCgUFBQUFBcXFxcXFxcqKioqKioqPz8/Pz8/P1JSUlJSUlJmZmZmZmZmdnZ2dnZ2doKCgoKCgoKPj4+Pj4+PnZ2dnZ2dnZ2qqqqqqqqqs7Ozs7Ozs7y8vLy8vLzKysrKysrKysrV1dXV1dXV3d3d3d3d3d6urq6urq6v39/f39/f0AAAAATGF2YzU4LjEzAAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAAAAAAAAAAFhpbmcAAAAPAAAABQACAgIEBggIFRcXGRkaGhoaHh4eIS'),
+    trace: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAeAAAUdAAHBwcHEhISEhISHBwcHBwcJiYmJiYmMDAwMDAwOjo6Ojo6OkRERERERE5OTk5OTlhYWFhYWGJiYmJiYmxsbGxsbHZ2dnZ2doCAf39/f4qKioqKipSUlJSUlJ6enp6enqioqKioqLKysrKysry8vLy8vMbGxsbGxtDQ0NDQ0Nra2tra2uTk5OTk5O7u7u7u7vj4+Pj4+AAAAAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQAAAAAAAAAFHTVGSUo'),
+    countdown: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAAsAAAUdAAGBgYGDAwMDAwMEhISEhISGBgYGBgYHh4eHh4eJCQkJCQkKioqKioqMDAwMDAwNjY2NjY2PDw8PDw8QkJCQkJCSEhISEhITk5OTk5OVFRUVFRUWlpaWlpaYGBgYGBgZmZmZmZmbGxsbGxscnJycnJyeHh4eHh4fn5+fn5+hISEhISEioqKioqKkJCQkJCQlpaWlpaWnJycnJycoqKioqKiqKioqKiotLS0tLS0urq6urq6wMDAwMDAxsbGxsbGzMzMzMzM0tLS0tLS2NjY2NjY3t7e3t7e5OTk5OTk6urq6urq8PDw8PDw9vb29vb2/Pz8/Pz8AAAAAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAJAAAAAAAAAUdNMUAF6o='),
+    result: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAA/AAAUdAADAwMDCAgICAcHCwwMDAsMCxAQEBAPDxUVFRUUFBoaGhkZGR8fHx4eHyMjIyMiIigoKCcnJywsLCwrKzEwMDAwMDU1NTQ0NDk5OTk4OD09PT09PUJCQkFBQUZGRkZFRUtLS0pKSk9PT05OTlRUVFNTU1hYWFdXV11dXVxcXGJiYmFhYWZmZmVlZWtra2pqam9vb25ubnR0dHNzdHh4eHh3d319fXx8fIGBgYCAgIWFhYSEhImJiYiIiI2NjYyMjJGRkZCQkJaWlpWVlZqamp2dnZeXl5ubm6Kiop+fn6ampqOjo6ioqKysrKmpqa2trbS0tLKysra2tr6+vre3t7u7u8LCwsDAwMbGxsPDw8fHx87OzsvLy8/Pz9bW1tPT09fX19/f39ra2t/f3+bm5uPj4+fn5+/v7+vr6/Dw8Pf39/Pz8/j4+P///wAAAAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAJAAAAAAAAAUdobNUx6A='),
+    confetti: new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA//tQwAAAAAAAAAAAAAAAAAAAAAAASW5mbwAAAA8AAAA4AAAUdAAFBQUFCgoKCgoKEBAQEBAQFRUVFRUVGhoaGhoaICAgICAgJiYmJiYmLCwsLCwsMTExMTExNzc3Nzc3PDw8PDw8QkJCQkJCSEhISEhITU1NTU1NU1NTU1NTWVlZWVlZX19fX19fZWVlZWVla2tra2trcHBwcHBwdnZ2dnZ2fHx8fHx8goKCgoKCiIiIiIiIjY2NjY2Nk5OTk5OTmZmZmZmZn5+fn5+fpWVlZWVlq6urq6ursLCwsLCwtbW1tbW1u7u7u7u7wcHBwcHBx8fHx8fHzc3Nzc3N0tLS0tLS2NjY2NjY3t7e3t7e5OTk5OTk6enp6enp7+/v7+/v9fX19fX1+/v7+/v7AAAAAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAJAAAAAAAAAUdYjIWPq8=')
+};
 
-        // Canvas コンテキスト
-        const ctx = amidakujiCanvas.getContext('2d');
+const ctx = amidakujiCanvas.getContext('2d');
 
-        // あみだくじのデータ構造
-        let amidakujiData = {
-            columns: 5,
-            connections: [], // 横線の接続情報
-            startNames: [],
-            goalNames: [],
-            paths: [], // 各スタートからゴールへのパス
-            goalMasked: true, // ゴールのマスキング状態
-            activeStartIndex: -1, // アクティブなスタートインデックス
-            isTracing: false,    // トレース中かどうか
-        };
+// --- あみだくじデータ構造 ---
+let amidakujiData = {
+    columns: 5,
+    connections: [],
+    startNames: [],
+    goalNames: [],
+    paths: [],
+    goalMasked: true,
+    activeStartIndex: -1,
+    isTracing: false,
+    goalNameOrder: []
+};
 
-        // 描画用の設定
-        const drawSettings = {
-            paddingX: 30,            // 左右の余白
-            paddingY: 40,            // 上下の余白
-            startPaddingY: 20,       // スタート位置から最初の横線までの余白
-            lineWidth: 2.5,          // 線の太さ
-            verticalLineColor: 'rgba(255, 255, 255, 0.8)',   // 縦線の色
-            horizontalLineColor: 'rgba(255, 255, 255, 0.7)', // 横線の色
-            activeLineColor: '#5b5fc7',  // トレース線の色
-            lineSpacing: 40,          // 横線の間隔
-            animationSpeed: 50,       // アニメーション速度（小さいほど速い）
-        };
+const drawSettings = {
+    paddingX: 30,
+    paddingY: 40,
+    startPaddingY: 20,
+    lineWidth: 2.5,
+    verticalLineColor: 'rgba(255,255,255,0.8)',
+    horizontalLineColor: 'rgba(255,255,255,0.7)',
+    activeLineColor: '#5b5fc7',
+    lineSpacing: 40,
+    animationSpeed: 50,
+    colWidth: 80
+};
 
-        // 初期状態の表示
-        function init() {
-            // デフォルト値を設定
-            amidakujiData.columns = 5;
-            amidakujiData.startNames = Array(5).fill().map((_, i) => `スタート${i + 1}`);
-            amidakujiData.goalNames = Array(5).fill().map((_, i) => `ゴール${i + 1}`);
-            
+// --- 初期化 ---
+function init() {
+    amidakujiData.columns = 5;
+    amidakujiData.startNames = Array(5).fill().map((_, i) => `スタート${i + 1}`);
+    amidakujiData.goalNames = Array(5).fill().map((_, i) => `ゴール${i + 1}`);
+    amidakujiData.goalNameOrder = [...Array(5).keys()];
+    updateInputFields();
+
+    columnsInput.addEventListener('input', function() {
+        const value = parseInt(this.value);
+        if (value >= 2 && value <= 10) {
+            amidakujiData.columns = value;
+            amidakujiData.startNames = Array(value).fill().map((_, i) => `スタート${i+1}`);
+            amidakujiData.goalNames = Array(value).fill().map((_, i) => `ゴール${i+1}`);
+            amidakujiData.goalNameOrder = [...Array(value).keys()];
             updateInputFields();
-            
-            // 列数が変更されたときの処理
-            columnsInput.addEventListener('input', function() {
-                const value = parseInt(this.value);
-                if (value >= 2 && value <= 10) {
-                    amidakujiData.columns = value;
-                    updateInputFields();
-                }
-            });
-
-            // あみだくじ作成ボタンのクリックイベント
-            createAmidakujiBtn.addEventListener('click', function() {
-                createAmidakuji();
-                showToast('あみだくじを作成しました');
-            });
-
-            // ゴールマスク切り替えボタンのクリックイベント
-            toggleGoalMaskBtn.addEventListener('click', function() {
-                toggleGoalMask();
-            });
-
-            // トレースボタンのクリックイベント
-            traceButton.addEventListener('click', function() {
-                if (amidakujiData.isTracing) return; // トレース中は無視
-                
-                if (amidakujiData.activeStartIndex === -1) {
-                    showToast('スタート位置を選択してください');
-                } else {
-                    tracePath(amidakujiData.activeStartIndex);
-                }
-            });
-
-            // リセットボタンのクリックイベント
-            resetButton.addEventListener('click', function() {
-                if (amidakujiData.isTracing) return; // トレース中は無視
-                
-                clearCanvas();
-                drawAmidakuji();
-                showToast('リセットしました');
-            });
-
-            // 設定に戻るボタンのクリックイベント
-            backToSettingsBtn.addEventListener('click', function() {
-                if (amidakujiData.isTracing) return; // トレース中は無視
-                
-                showSettingsPanel();
-            });
         }
+    });
 
-        // 入力フィールドの更新
-        function updateInputFields() {
-            const columns = amidakujiData.columns;
-            
-            // スタート名の入力フィールド
-            startNamesContainer.innerHTML = '';
-            for (let i = 0; i < columns; i++) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'form-input start-name';
-                input.placeholder = `スタート${i + 1}`;
-                input.value = amidakujiData.startNames[i] || `スタート${i + 1}`;
-                startNamesContainer.appendChild(input);
-            }
-            
-            // ゴール名の入力フィールド
-            goalNamesContainer.innerHTML = '';
-            for (let i = 0; i < columns; i++) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.className = 'form-input goal-name';
-                input.placeholder = `ゴール${i + 1}`;
-                input.value = amidakujiData.goalNames[i] || `ゴール${i + 1}`;
-                goalNamesContainer.appendChild(input);
-            }
-        }
+    createAmidakujiBtn.addEventListener('click', function() {
+        createAmidakuji();
+        showToast('あみだくじを作成しました');
+        if (effectSound.checked) sounds.click.play();
+    });
 
-        // あみだくじの作成
-        function createAmidakuji() {
-            // 現在の設定を取得
-            const columns = parseInt(columnsInput.value);
-            if (columns < 2 || columns > 10) {
-                showToast('列数は2〜10の間で指定してください');
-                return;
-            }
-            
-            amidakujiData.columns = columns;
-            
-            // スタート名とゴール名を取得
-            amidakujiData.startNames = Array.from(document.querySelectorAll('.start-name')).map(input => input.value.trim() || input.placeholder);
-            amidakujiData.goalNames = Array.from(document.querySelectorAll('.goal-name')).map(input => input.value.trim() || input.placeholder);
-            
-            // ランダムな横線をシャッフルして生成
-            generateConnections();
-            
-            // パスを計算
-            calculatePaths();
-            
-            // あみだくじ画面を表示
-            showAmidakujiPanel();
-            
-            // スタートポイントとゴールポイントを表示
-            renderEndpoints();
-            
-            // キャンバスサイズを調整して描画
-            resizeCanvas();
-            drawAmidakuji();
-        }
+    toggleGoalMaskBtn.addEventListener('click', function() {
+        amidakujiData.goalMasked = !amidakujiData.goalMasked;
+        renderEndpoints();
+        showToast(amidakujiData.goalMasked ? 'ゴールを非表示にしました' : 'ゴールを表示しました');
+        if (effectSound.checked) sounds.select.play();
+    });
 
-        // あみだくじの接続（横線）をランダム生成
-        function generateConnections() {
-            amidakujiData.connections = [];
-            const columns = amidakujiData.columns;
-            
-            // 横線の行数を決定（列数に比例するよう調整）
-            const rows = Math.min(10, Math.max(5, columns * 1.5));
-            
-            // 横線の数を決定（複雑さを調整）
-            const maxConnections = (columns - 1) * rows / 2; // 最大で全ての可能な場所の半分に線を配置
-            const numConnections = Math.floor(maxConnections * 0.7); // 70%の密度
-            
-            // 横線を配置できる全ての位置を生成
-            const allPositions = [];
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < columns - 1; col++) {
-                    allPositions.push({ row, col });
-                }
-            }
-            
-            // 位置をシャッフル
-            shuffleArray(allPositions);
-            
-            // 必要な数の横線を選択
-            for (let i = 0; i < numConnections; i++) {
-                if (i < allPositions.length) {
-                    const position = allPositions[i];
-                    
-                    // 既存の接続と衝突しないようにする
-                    if (!hasConflict(position.row, position.col)) {
-                        amidakujiData.connections.push({ row: position.row, col: position.col });
-                    }
-                }
-            }
-            
-            // 行番号でソート
-            amidakujiData.connections.sort((a, b) => a.row - b.row || a.col - b.col);
+    traceButton.addEventListener('click', function() {
+        if (amidakujiData.isTracing) return;
+        if (amidakujiData.activeStartIndex === -1) {
+            showToast('スタート位置を選択してください');
+        } else {
+            startTraceWithEffects(amidakujiData.activeStartIndex);
         }
-        
-        // 配列をシャッフルするユーティリティ関数
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+    });
+
+    resetButton.addEventListener('click', function() {
+        if (amidakujiData.isTracing) return;
+        clearCanvas();
+        drawAmidakuji();
+        amidakujiData.activeStartIndex = -1;
+        renderEndpoints();
+        showToast('リセットしました');
+    });
+
+    backToSettingsBtn.addEventListener('click', function() {
+        if (amidakujiData.isTracing) return;
+        showSettingsPanel();
+    });
+
+    celebrationClose.addEventListener('click', function() {
+        celebrationOverlay.classList.remove('active');
+    });
+}
+
+// --- 入力フィールド ---
+function updateInputFields() {
+    const columns = amidakujiData.columns;
+    startNamesContainer.innerHTML = '';
+    goalNamesContainer.innerHTML = '';
+    for (let i = 0; i < columns; i++) {
+        const input1 = document.createElement('input');
+        input1.type = 'text';
+        input1.className = 'form-input start-name';
+        input1.placeholder = `スタート${i + 1}`;
+        input1.value = amidakujiData.startNames[i] || `スタート${i + 1}`;
+        startNamesContainer.appendChild(input1);
+
+        const input2 = document.createElement('input');
+        input2.type = 'text';
+        input2.className = 'form-input goal-name';
+        input2.placeholder = `ゴール${i + 1}`;
+        input2.value = amidakujiData.goalNames[i] || `ゴール${i + 1}`;
+        goalNamesContainer.appendChild(input2);
+    }
+}
+
+// --- ゴール名シャッフル ---
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// --- あみだくじ作成 ---
+function createAmidakuji() {
+    const columns = parseInt(columnsInput.value);
+    amidakujiData.columns = columns;
+    amidakujiData.startNames = Array.from(document.querySelectorAll('.start-name')).map(input => input.value.trim() || input.placeholder);
+    amidakujiData.goalNames = Array.from(document.querySelectorAll('.goal-name')).map(input => input.value.trim() || input.placeholder);
+
+    // ゴール名の順番をシャッフルし保持
+    amidakujiData.goalNameOrder = shuffleArray([...Array(columns).keys()]);
+    generateConnections();
+    calculatePaths();
+    showAmidakujiPanel();
+    renderEndpoints();
+    resizeCanvas();
+    drawAmidakuji();
+}
+
+// --- 横線生成 ---
+function generateConnections() {
+    amidakujiData.connections = [];
+    const columns = amidakujiData.columns;
+    const rows = Math.min(12, Math.max(5, columns * 2));
+    const maxConnections = (columns - 1) * rows / 2;
+    const numConnections = Math.floor(maxConnections * 0.7);
+
+    const allPositions = [];
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < columns - 1; col++) {
+            allPositions.push({ row, col });
         }
-        
-        // 横線の衝突をチェック
-        function hasConflict(row, col) {
-            // 同じ位置に既に横線がある場合
-            const samePosition = amidakujiData.connections.some(conn => 
-                conn.row === row && conn.col === col
+    }
+    shuffleArray(allPositions);
+
+    function hasConflict(row, col) {
+        const samePosition = amidakujiData.connections.some(conn => conn.row === row && conn.col === col);
+        const adjacentPosition = amidakujiData.connections.some(conn =>
+            conn.row === row && (conn.col === col - 1 || conn.col === col + 1)
+        );
+        return samePosition || adjacentPosition;
+    }
+
+    for (let i = 0; i < numConnections; i++) {
+        if (i < allPositions.length) {
+            const position = allPositions[i];
+            if (!hasConflict(position.row, position.col)) {
+                amidakujiData.connections.push({ row: position.row, col: position.col });
+            }
+        }
+    }
+    amidakujiData.connections.sort((a, b) => a.row - b.row || a.col - b.col);
+}
+
+// --- パス計算 ---
+function calculatePaths() {
+    const columns = amidakujiData.columns;
+    amidakujiData.paths = [];
+    for (let start = 0; start < columns; start++) {
+        let currentCol = start;
+        const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0);
+        const pathPoints = [];
+        pathPoints.push(
+            { x: currentCol, y: -1 },
+            { x: currentCol, y: 0 }
+        );
+        for (let row = 0; row <= maxRow; row++) {
+            const rightConnection = amidakujiData.connections.find(
+                conn => conn.row === row && conn.col === currentCol
             );
-            
-            // 隣接する列に同じ行で横線がある場合（デッドロック防止）
-            const adjacentPosition = amidakujiData.connections.some(conn => 
-                conn.row === row && (conn.col === col - 1 || conn.col === col + 1)
+            const leftConnection = amidakujiData.connections.find(
+                conn => conn.row === row && conn.col === currentCol - 1
             );
-            
-            return samePosition || adjacentPosition;
-        }
-
-        // 各スタートからゴールへのパスを計算
-        function calculatePaths() {
-            const columns = amidakujiData.columns;
-            amidakujiData.paths = [];
-            
-            for (let start = 0; start < columns; start++) {
-                let currentCol = start;
-                
-                // 各行で接続を確認
-                const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0);
-                
-                // パスポイントを作成
-                const pathPoints = [];
-                
-                // スタート位置（上部の縦線も含める）
+            if (rightConnection) {
                 pathPoints.push(
-                    { x: currentCol, y: -1 }, // スタートの上部（垂直線の起点）
-                    { x: currentCol, y: 0 }   // スタート位置
+                    { x: currentCol, y: row },
+                    { x: currentCol + 1, y: row }
                 );
-                
-                for (let row = 0; row <= maxRow; row++) {
-                    // 右に接続がある場合
-                    const rightConnection = amidakujiData.connections.find(
-                        conn => conn.row === row && conn.col === currentCol
-                    );
-                    
-                    // 左に接続がある場合
-                    const leftConnection = amidakujiData.connections.find(
-                        conn => conn.row === row && conn.col === currentCol - 1
-                    );
-                    
-                    if (rightConnection) {
-                        // 右に移動
-                        pathPoints.push(
-                            { x: currentCol, y: row },
-                            { x: currentCol + 1, y: row }
-                        );
-                        currentCol++;
-                    } else if (leftConnection) {
-                        // 左に移動
-                        pathPoints.push(
-                            { x: currentCol, y: row },
-                            { x: currentCol - 1, y: row }
-                        );
-                        currentCol--;
-                    }
-                    
-                    // 次の行に移動
-                    if (row < maxRow) {
-                        pathPoints.push({ x: currentCol, y: row + 1 });
-                    }
-                }
-                
-                // ゴール位置
-                pathPoints.push({ x: currentCol, y: maxRow + 1 });
-                
-                // パスとゴール位置を保存
-                amidakujiData.paths.push({
-                    path: pathPoints,
-                    goal: currentCol
-                });
+                currentCol++;
+            } else if (leftConnection) {
+                pathPoints.push(
+                    { x: currentCol, y: row },
+                    { x: currentCol - 1, y: row }
+                );
+                currentCol--;
+            }
+            if (row < maxRow) {
+                pathPoints.push({ x: currentCol, y: row + 1 });
             }
         }
+        pathPoints.push({ x: currentCol, y: maxRow + 1 });
+        amidakujiData.paths.push({
+            path: pathPoints,
+            goal: currentCol
+        });
+    }
+}
 
-        // 設定画面を表示
-        function showSettingsPanel() {
-            amidakujiContainer.style.display = 'none';
-            settingsPanel.style.display = 'block';
-            // アクティブなスタートをリセット
-            amidakujiData.activeStartIndex = -1;
-        }
+// --- スタート・ゴール表示 ---
+function renderEndpoints() {
+    startPointsContainer.innerHTML = '';
+    goalPointsContainer.innerHTML = '';
+    const columns = amidakujiData.columns;
 
-        // あみだくじ画面を表示
-        function showAmidakujiPanel() {
-            settingsPanel.style.display = 'none';
-            amidakujiContainer.style.display = 'flex';
-        }
+    for (let i = 0; i < columns; i++) {
+        const sp = document.createElement('div');
+        sp.className = 'start-point';
+        sp.textContent = amidakujiData.startNames[i];
+        sp.dataset.index = i;
+        if (amidakujiData.activeStartIndex === i) sp.classList.add('active');
+        sp.addEventListener('click', function() {
+            if (amidakujiData.isTracing) return;
+            selectStartPoint(i);
+            if (effectSound.checked) sounds.select.play();
+            if (effectVibration.checked && window.navigator && window.navigator.vibrate)
+                window.navigator.vibrate(50);
+        });
+        startPointsContainer.appendChild(sp);
+    }
+    for (let i = 0; i < columns; i++) {
+        const gp = document.createElement('div');
+        gp.className = 'goal-point';
+        if (amidakujiData.goalMasked) gp.classList.add('masked');
+        const idx = amidakujiData.goalNameOrder.findIndex(order => order === i);
+        gp.textContent = amidakujiData.goalNames[idx];
+        goalPointsContainer.appendChild(gp);
+    }
+}
 
-        // スタートとゴールのポイントを表示
-        function renderEndpoints() {
-            startPointsContainer.innerHTML = '';
-            goalPointsContainer.innerHTML = '';
-            
-            const columns = amidakujiData.columns;
-            
-            // スタートポイント
-            for (let i = 0; i < columns; i++) {
-                const startPoint = document.createElement('div');
-                startPoint.className = 'start-point';
-                startPoint.textContent = amidakujiData.startNames[i];
-                startPoint.dataset.index = i;
-                
-                // スタートポイントのクリックイベント
-                startPoint.addEventListener('click', function() {
-                    if (amidakujiData.isTracing) return; // トレース中は選択不可
-                    
-                    const index = parseInt(this.dataset.index);
-                    selectStartPoint(index);
-                });
-                
-                startPointsContainer.appendChild(startPoint);
-            }
-            
-            // ゴールポイント
-            for (let i = 0; i < columns; i++) {
-                const goalPoint = document.createElement('div');
-                goalPoint.className = 'goal-point';
-                if (amidakujiData.goalMasked) {
-                    goalPoint.classList.add('masked');
-                }
-                
-                // ゴール名はシャッフルされている
-                const goalIndex = amidakujiData.paths.findIndex(p => p.goal === i);
-                goalPoint.textContent = amidakujiData.goalNames[goalIndex];
-                goalPoint.dataset.index = i;
-                
-                goalPointsContainer.appendChild(goalPoint);
-            }
-        }
+// --- スタート選択 ---
+function selectStartPoint(index) {
+    amidakujiData.activeStartIndex = index;
+    renderEndpoints();
+    clearCanvas();
+    drawAmidakuji();
+    showToast(`スタート${index + 1}を選択しました`);
+}
 
-        // スタートポイントの選択
-        function selectStartPoint(index) {
-            // 以前の選択をクリア
-            const startPoints = document.querySelectorAll('.start-point');
-            startPoints.forEach(point => point.classList.remove('active'));
-            
-            // 新しい選択をアクティブに
-            startPoints[index].classList.add('active');
-            
-            // 選択されたインデックスを保存
-            amidakujiData.activeStartIndex = index;
-            
-            // キャンバスをリセットして再描画
-            clearCanvas();
-            drawAmidakuji();
-            
-            showToast(`スタート${index + 1}を選択しました`);
-        }
+// --- 設定/ゲーム画面切替 ---
+function showSettingsPanel() {
+    amidakujiContainer.style.display = 'none';
+    settingsPanel.style.display = 'block';
+    amidakujiData.activeStartIndex = -1;
+}
+function showAmidakujiPanel() {
+    settingsPanel.style.display = 'none';
+    amidakujiContainer.style.display = 'flex';
+}
 
-        // ゴールのマスク表示を切り替え
-        function toggleGoalMask() {
-            amidakujiData.goalMasked = !amidakujiData.goalMasked;
-            
-            const goalPoints = document.querySelectorAll('.goal-point');
-            goalPoints.forEach(point => {
-                if (amidakujiData.goalMasked) {
-                    point.classList.add('masked');
-                } else {
-                    point.classList.remove('masked');
-                }
-            });
-            
-            showToast(amidakujiData.goalMasked ? 'ゴールを非表示にしました' : 'ゴールを表示しました');
-        }
+// --- あみだくじ描画 ---
+function resizeCanvas() {
+    const columns = amidakujiData.columns;
+    const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
+    const contentWidth = amidakujiContainer.clientWidth - 40;
+    const contentHeight = amidakujiContainer.clientHeight - 200;
+    const minColWidth = 60;
+    const colWidth = Math.max(minColWidth, Math.min(100, Math.floor(contentWidth / columns)));
+    const width = Math.max(300, columns * colWidth);
+    const height = Math.min(contentHeight, (maxRow + 2) * drawSettings.lineSpacing + drawSettings.paddingY * 2);
+    amidakujiCanvas.width = width;
+    amidakujiCanvas.height = height;
+    drawSettings.colWidth = colWidth;
+}
+function clearCanvas() {
+    ctx.clearRect(0, 0, amidakujiCanvas.width, amidakujiCanvas.height);
+}
+function drawAmidakuji() {
+    clearCanvas();
+    const columns = amidakujiData.columns;
+    const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
+    const colWidth = drawSettings.colWidth;
+    ctx.lineWidth = drawSettings.lineWidth;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
 
-        // キャンバスのサイズを調整
-        function resizeCanvas() {
-            const columns = amidakujiData.columns;
-            const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
-            
-            // コンテナのサイズを取得
-            const contentWidth = amidakujiContainer.clientWidth - 20; // パディングを考慮
-            const contentHeight = amidakujiContainer.clientHeight - 150; // 他の要素のスペースを考慮
-            
-            // モバイル向けに調整: 列幅を自動調整
-            const colWidth = Math.max(40, Math.min(80, Math.floor(contentWidth / columns)));
-            
-            // モバイル向けに高さを調整: 線間隔を調整
-            const lineSpacing = Math.max(30, Math.min(40, Math.floor(contentHeight / (maxRow + 2))));
-            drawSettings.lineSpacing = lineSpacing;
-            
-            // キャンバスの幅と高さを計算
-            const width = Math.max(300, columns * colWidth);
-            const height = Math.min(contentHeight, (maxRow + 2) * lineSpacing + drawSettings.paddingY);
-            
-            // キャンバスのサイズを設定
-            amidakujiCanvas.width = width;
-            amidakujiCanvas.height = height;
-            
-            // 描画設定を更新
-            drawSettings.colWidth = colWidth;
-        }
-
-        // キャンバスをクリア
-        function clearCanvas() {
-            ctx.clearRect(0, 0, amidakujiCanvas.width, amidakujiCanvas.height);
-        }
-
-        // あみだくじを描画
-        function drawAmidakuji() {
-            clearCanvas();
-            
-            const columns = amidakujiData.columns;
-            const maxRow = Math.max(...amidakujiData.connections.map(c => c.row), 0) + 1;
-            const colWidth = drawSettings.colWidth;
-            
-            // 設定
-            ctx.lineWidth = drawSettings.lineWidth;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            // スタート部分の上の垂直線を描画（各スタートから独立した線として）
-            ctx.strokeStyle = drawSettings.verticalLineColor;
-            for (let i = 0; i < columns; i++) {
+    ctx.strokeStyle = drawSettings.verticalLineColor;
+    for (let i = 0; i < columns; i++) {
+        ctx.beginPath();
+        const x = i * colWidth + colWidth / 2;
+        const yStart = drawSettings.paddingY - drawSettings.startPaddingY;
+        const yEnd = drawSettings.paddingY;
+        ctx.moveTo(x, yStart);
+        ctx.lineTo(x, yEnd);
+        ctx.stroke();
+    }
+    ctx.strokeStyle = drawSettings.verticalLineColor;
+    for (let i = 0; i < columns; i++) {
+        const x = i * colWidth + colWidth / 2;
+        for (let row = 0; row <= maxRow; row++) {
+            const hasRightLine = amidakujiData.connections.some(
+                conn => conn.row === row && conn.col === i
+            );
+            const hasLeftLine = amidakujiData.connections.some(
+                conn => conn.row === row && conn.col === i - 1
+            );
+            if (!hasRightLine && !hasLeftLine) {
+                const y1 = row * drawSettings.lineSpacing + drawSettings.paddingY;
+                const y2 = (row + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
                 ctx.beginPath();
-                const x = i * colWidth + colWidth / 2;
-                const yStart = drawSettings.paddingY - drawSettings.startPaddingY; // スタート位置より上部
-                const yEnd = drawSettings.paddingY; // スタート位置
-                ctx.moveTo(x, yStart);
-                ctx.lineTo(x, yEnd);
+                ctx.moveTo(x, y1);
+                ctx.lineTo(x, y2);
+                ctx.stroke();
+            } else {
+                const y = row * drawSettings.lineSpacing + drawSettings.paddingY;
+                if (hasRightLine) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, (row === 0 ? 0 : (row - 1)) * drawSettings.lineSpacing + drawSettings.paddingY);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+                if (hasLeftLine) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, (row === 0 ? 0 : (row - 1)) * drawSettings.lineSpacing + drawSettings.paddingY);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
+                const y1 = row * drawSettings.lineSpacing + drawSettings.paddingY;
+                const y2 = (row + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
+                ctx.beginPath();
+                ctx.moveTo(x, y1);
+                ctx.lineTo(x, y2);
                 ctx.stroke();
             }
-            
-            // 縦線を描画（スタートからゴールまで）
-            ctx.strokeStyle = drawSettings.verticalLineColor;
-            for (let i = 0; i < columns; i++) {
-                const x = i * colWidth + colWidth / 2;
-                
-                // 各行ごとに線分を描画
-                for (let row = 0; row <= maxRow; row++) {
-                    // 横線の有無を確認
-                    const hasRightLine = amidakujiData.connections.some(
-                        conn => conn.row === row && conn.col === i
-                    );
-                    const hasLeftLine = amidakujiData.connections.some(
-                        conn => conn.row === row && conn.col === i - 1
-                    );
-                    
-                    // 現在の行に横線がなければ縦線を描画
-                    if (!hasRightLine && !hasLeftLine) {
-                        const y1 = row * drawSettings.lineSpacing + drawSettings.paddingY;
-                        const y2 = (row + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(x, y1);
-                        ctx.lineTo(x, y2);
-                        ctx.stroke();
-                    }
-                    // 横線がある場合は、その位置までの線を描画
-                    else {
-                        const y = row * drawSettings.lineSpacing + drawSettings.paddingY;
-                        
-                        if (hasRightLine) {
-                            // 右側に横線がある場合
-                            ctx.beginPath();
-                            ctx.moveTo(x, (row === 0 ? 0 : (row - 1)) * drawSettings.lineSpacing + drawSettings.paddingY);
-                            ctx.lineTo(x, y);
-                            ctx.stroke();
-                        }
-                        
-                        if (hasLeftLine) {
-                            // 左側に横線がある場合
-                            ctx.beginPath();
-                            ctx.moveTo(x, (row === 0 ? 0 : (row - 1)) * drawSettings.lineSpacing + drawSettings.paddingY);
-                            ctx.lineTo(x, y);
-                            ctx.stroke();
-                        }
-                        
-                        // 横線の下から次の行までの縦線を描画
-                        const y1 = row * drawSettings.lineSpacing + drawSettings.paddingY;
-                        const y2 = (row + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
-                        
-                        ctx.beginPath();
-                        ctx.moveTo(x, y1);
-                        ctx.lineTo(x, y2);
-                        ctx.stroke();
-                    }
-                }
-                
-                // 最後の行からゴールまでの線
-                const yLastRow = maxRow * drawSettings.lineSpacing + drawSettings.paddingY;
-                const yGoal = (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
-                
-                ctx.beginPath();
-                ctx.moveTo(x, yLastRow);
-                ctx.lineTo(x, yGoal);
-                ctx.stroke();
-            }
-            
-            // 横線を描画
-            ctx.strokeStyle = drawSettings.horizontalLineColor;
-            amidakujiData.connections.forEach(conn => {
-                const x1 = conn.col * colWidth + colWidth / 2;
-                const x2 = (conn.col + 1) * colWidth + colWidth / 2;
-                const y = conn.row * drawSettings.lineSpacing + drawSettings.paddingY;
-                
-                ctx.beginPath();
-                ctx.moveTo(x1, y);
-                ctx.lineTo(x2, y);
-                ctx.stroke();
-            });
         }
+        const yLastRow = maxRow * drawSettings.lineSpacing + drawSettings.paddingY;
+        const yGoal = (maxRow + 1) * drawSettings.lineSpacing + drawSettings.paddingY;
+        ctx.beginPath();
+        ctx.moveTo(x, yLastRow);
+        ctx.lineTo(x, yGoal);
+        ctx.stroke();
+    }
+    ctx.strokeStyle = drawSettings.horizontalLineColor;
+    amidakujiData.connections.forEach(conn => {
+        const x1 = conn.col * colWidth + colWidth / 2;
+        const x2 = (conn.col + 1) * colWidth + colWidth / 2;
+        const y = conn.row * drawSettings.lineSpacing + drawSettings.paddingY;
+        ctx.beginPath();
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+        ctx.stroke();
+    });
+}
 
-        // パスのトレース
-        function tracePath(startIndex) {
-            if (startIndex < 0 || startIndex >= amidakujiData.columns) return;
-            if (amidakujiData.isTracing) return; // 既にトレース中なら何もしない
-            
-            amidakujiData.isTracing = true; // トレース開始
-            
-            const path = amidakujiData.paths[startIndex].path;
-            if (!path || path.length === 0) {
-                amidakujiData.isTracing = false;
-                return;
-            }
-            
-            const colWidth = drawSettings.colWidth;
-            
-            // トレース前に再描画
-            clearCanvas();
-            drawAmidakuji();
-            
-            // アニメーションの設定
-            let currentStep = 0;
-            const pathLength = path.length - 1;
-            
-            // アニメーション関数
-            function animate() {
-                if (currentStep >= pathLength) {
-                    // アニメーション終了
-                    amidakujiData.isTracing = false;
-                    
-                    // ゴールポイントを表示
-                    const goalIndex = amidakujiData.paths[startIndex].goal;
-                    const goalPoints = document.querySelectorAll('.goal-point');
-                    
-                    // 一時的にマスクを解除してゴールを表示
-                    goalPoints[goalIndex].classList.remove('masked');
-                    
-                    // ゴールポイントをハイライト
-                    goalPoints[goalIndex].style.background = 'rgba(99, 102, 241, 0.3)';
-                    goalPoints[goalIndex].style.borderColor = 'rgba(99, 102, 241, 0.5)';
-                    
-                    // トーストでゴール通知
-                    showToast(`${amidakujiData.startNames[startIndex]}は${goalPoints[goalIndex].textContent}に到達しました！`);
-                    
-                    // 一定時間後にマスクを再適用（ユーザー設定を尊重）
-                    if (amidakujiData.goalMasked) {
-                        setTimeout(() => {
-                            if (amidakujiData.goalMasked) {
-                                goalPoints[goalIndex].classList.add('masked');
-                            }
-                            
-                            // ハイライトを元に戻す
-                            setTimeout(() => {
-                                goalPoints[goalIndex].style.background = '';
-                                goalPoints[goalIndex].style.borderColor = '';
-                            }, 1000);
-                        }, 3000);
-                    } else {
-                        // マスクしない場合は、ハイライトだけ元に戻す
-                        setTimeout(() => {
-                            goalPoints[goalIndex].style.background = '';
-                            goalPoints[goalIndex].style.borderColor = '';
-                        }, 3000);
-                    }
-                    
-                    return;
-                }
-                
-                // 現在のステップと次のステップのポイントを取得
-                const current = path[currentStep];
-                const next = path[currentStep + 1];
-                
-                // 座標を計算
-                const x1 = current.x * colWidth + colWidth / 2;
-                const y1 = current.y < 0 ? drawSettings.paddingY - drawSettings.startPaddingY : current.y * drawSettings.lineSpacing + drawSettings.paddingY;
-                const x2 = next.x * colWidth + colWidth / 2;
-                const y2 = next.y < 0 ? drawSettings.paddingY - drawSettings.startPaddingY : next.y * drawSettings.lineSpacing + drawSettings.paddingY;
-                
-                // 線を描画
-                ctx.beginPath();
-                ctx.strokeStyle = drawSettings.activeLineColor;
-                ctx.lineWidth = drawSettings.lineWidth + 1;
-                ctx.moveTo(x1, y1);
-                ctx.lineTo(x2, y2);
-                ctx.stroke();
-                
-                // 次のステップへ
-                currentStep++;
-                
-                // 次のフレームをリクエスト
-                setTimeout(animate, drawSettings.animationSpeed);
-            }
-            
-            // アニメーション開始
-            animate();
-        }
+// --- 紙吹雪 ---
+function showConfetti() {
+    if (!effectConfetti.checked) return;
+    for (let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        const size = 8 + Math.random() * 12;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.background = `hsl(${Math.floor(Math.random()*360)}, 85%, 60%)`;
+        particle.style.left = `${Math.random()*100}vw`;
+        particle.style.top = `-40px`;
+        particle.style.opacity = 0.7 + Math.random()*0.3;
+        particle.style.zIndex = 3000;
+        particle.style.animation = `confetti-fall ${1.1 + Math.random()*1.2}s cubic-bezier(.4,1.2,.7,1) forwards`;
+        document.body.appendChild(particle);
+        setTimeout(()=>particle.remove(), 2400);
+    }
+    if (effectSound.checked) sounds.confetti.play();
+    if (effectVibration.checked && window.navigator && window.navigator.vibrate)
+        window.navigator.vibrate([80, 50, 80]);
+}
 
-        // トースト通知を表示
-        function showToast(message) {
-            toastMessage.textContent = message;
-            toast.classList.add('active');
-            
+// --- カウントダウン ---
+function showCountdownAndTrace(startIndex) {
+    if (!effectCountdown.checked) {
+        tracePath(startIndex);
+        return;
+    }
+    let count = 3;
+    countdownTimer.textContent = count;
+    countdownTimer.classList.add('active');
+    countdownTimer.style.animation = 'countdown-pulse 0.7s;';
+    if (effectSound.checked) sounds.countdown.play();
+
+    function tick() {
+        if (count > 1) {
             setTimeout(() => {
-                toast.classList.remove('active');
-            }, 3000);
+                count--;
+                countdownTimer.textContent = count;
+                if (effectSound.checked) sounds.countdown.play();
+                tick();
+            }, 800);
+        } else {
+            setTimeout(() => {
+                countdownTimer.classList.remove('active');
+                tracePath(startIndex);
+            }, 800);
         }
+    }
+    tick();
+}
 
-        // iOSのスクロール制御（バウンス効果を防ぐ）
-        document.addEventListener('touchmove', function(e) {
-            if (e.target.closest('.amidakuji-canvas') || e.target.closest('.amidakuji-content')) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        // アドレスバーのリサイズ対応
-        function handleResize() {
-            setViewportHeight();
-            
-            if (amidakujiContainer.style.display !== 'none') {
-                // トレース中は再描画しない
-                if (!amidakujiData.isTracing) {
-                    resizeCanvas();
-                    drawAmidakuji();
-                }
-            }
+// --- トレース＋演出 ---
+function startTraceWithEffects(startIndex) {
+    showCountdownAndTrace(startIndex);
+}
+
+// --- トレース本体 ---
+function tracePath(startIndex) {
+    if (startIndex < 0 || startIndex >= amidakujiData.columns) return;
+    if (amidakujiData.isTracing) return;
+    amidakujiData.isTracing = true;
+    const path = amidakujiData.paths[startIndex].path;
+    if (!path || path.length === 0) {
+        amidakujiData.isTracing = false;
+        return;
+    }
+    const colWidth = drawSettings.colWidth;
+    clearCanvas();
+    drawAmidakuji();
+    let currentStep = 0;
+    const pathLength = path.length - 1;
+
+    function animate() {
+        if (currentStep >= pathLength) {
+            amidakujiData.isTracing = false;
+            const goalCol = amidakujiData.paths[startIndex].goal;
+            const idx = amidakujiData.goalNameOrder.findIndex(order => order === goalCol);
+            const goalName = amidakujiData.goalNames[idx];
+            showConfetti();
+            if (effectSound.checked) sounds.result.play();
+            if (effectVibration.checked && window.navigator && window.navigator.vibrate)
+                window.navigator.vibrate([90, 40, 90]);
+            celebrationResult.textContent = `${amidakujiData.startNames[startIndex]} は 「${goalName}」 です！`;
+            celebrationOverlay.classList.add('active');
+            goalPointsContainer.childNodes[goalCol].classList.remove('masked');
+            setTimeout(() => {
+                if (amidakujiData.goalMasked)
+                    goalPointsContainer.childNodes[goalCol].classList.add('masked');
+            }, 2500);
+            return;
         }
+        const current = path[currentStep];
+        const next = path[currentStep + 1];
+        const x1 = current.x * colWidth + colWidth / 2;
+        const y1 = current.y < 0 ? drawSettings.paddingY - drawSettings.startPaddingY : current.y * drawSettings.lineSpacing + drawSettings.paddingY;
+        const x2 = next.x * colWidth + colWidth / 2;
+        const y2 = next.y < 0 ? drawSettings.paddingY - drawSettings.startPaddingY : next.y * drawSettings.lineSpacing + drawSettings.paddingY;
+        ctx.beginPath();
+        ctx.strokeStyle = drawSettings.activeLineColor;
+        ctx.lineWidth = drawSettings.lineWidth + 1;
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
 
-        // ページ読み込み時の初期化
-        window.addEventListener('load', init);
-        
-        // ウィンドウリサイズとスクロール時のイベント
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', handleResize);
-        window.addEventListener('scroll', function() {
-            // スクロール中もビューポート高さを更新
-            setViewportHeight();
-        });
-        
-        // iOSのソフトキーボード表示/非表示時の高さ調整
-        const inputs = document.querySelectorAll('input, textarea');
-        inputs.forEach(input => {
-            input.addEventListener('focus', () => {
-                setTimeout(setViewportHeight, 300);
-            });
-            input.addEventListener('blur', () => {
-                setTimeout(setViewportHeight, 300);
-            });
-        });
+        if (effectSound.checked) sounds.trace.play();
+        currentStep++;
+        setTimeout(animate, drawSettings.animationSpeed);
+    }
+    animate();
+}
 
-        // モバイルデバイスの検出とタッチ最適化
-        if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
-            document.body.classList.add('mobile');
-            
-            // タッチデバイスでのダブルタップによるズームを防止
-            let lastTap = 0;
-            document.addEventListener('touchend', function(e) {
-                const currentTime = new Date().getTime();
-                const tapLength = currentTime - lastTap;
-                if (tapLength < 300 && tapLength > 0) {
-                    e.preventDefault();
-                }
-                lastTap = currentTime;
-            });
-        }
-    </script>
+// --- トースト ---
+function showToast(message) {
+    toastMessage.textContent = message;
+    toast.classList.add('active');
+    setTimeout(() => toast.classList.remove('active'), 2800);
+}
+
+// --- ウィンドウイベント ---
+window.addEventListener('load', init);
+window.addEventListener('resize', function() {
+    if (amidakujiContainer.style.display !== 'none' && !amidakujiData.isTracing) {
+        resizeCanvas();
+        drawAmidakuji();
+    }
+});
+</script>
 </body>
 </html>
